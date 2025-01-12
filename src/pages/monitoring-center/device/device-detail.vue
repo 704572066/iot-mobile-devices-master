@@ -32,7 +32,7 @@ const queryParams = reactive({
 const dataList = ref([])
 const getDetail = async () => {
   const res = await getDeviceDetail(id)
-  dataList.value = JSON.parse(res.metadata)?.properties
+  dataList.value = JSON.parse(res.metadata)?.properties.filter(item => item.expands.isDisplay===true)
   const params = {
     dashboard: 'device',
     dimension: 'history',

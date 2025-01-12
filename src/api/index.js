@@ -1,6 +1,6 @@
 import { myHttps } from './request'
 const baseUrl = 'https://iot.jxts119.com/api/'
-// const baseurl = 'http://172.20.10.2:8848/api'
+// const baseurl = 'http://localhost:8848/api'
 export const login = data => {
   return myHttps('post', baseUrl + 'authorize/login', data)
 }
