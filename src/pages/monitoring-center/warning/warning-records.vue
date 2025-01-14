@@ -17,7 +17,7 @@
           <view class="times2">{{ item.description }}</view>
           <view class="times">告警时间 </view>
           <view class="times2">{{
-            dayjs(item.alarmTime).format('YYYY-MM-DD hh:mm:ss')
+            dayjs(item.alarmTime).format('YYYY-MM-DD HH:mm:ss')
           }}</view>
         </view>
       </view>
