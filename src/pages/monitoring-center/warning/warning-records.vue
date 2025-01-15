@@ -43,8 +43,8 @@ onLoad(query => {
   getData()
 })
 const queryParams = reactive({
-  pageIndex: 1,
-  pageSize: 10
+  pageIndex: 0,
+  pageSize: 12
 })
 const dataList = ref([])
 const status = ref('more')
@@ -53,11 +53,11 @@ const getData = async () => {
   const params = {
     pageIndex: queryParams.pageIndex,
     pageSize: queryParams.pageSize,
-    alarmConfigId: alarmConfigId,
+    // alarmConfigId: alarmConfigId,
     terms: [
       {
         column: 'alarmRecordId',
-        termType: 'eq',
+        termType: 'eq$not',
         value: id,
         type: 'and'
       }
@@ -65,7 +65,7 @@ const getData = async () => {
     sorts: [{ name: 'alarmTime', order: 'desc' }]
   }
   status.value = 'loading'
-  const res = await getWarningHistory(params).finally(() => {
+  const res = await getWarningHistory(alarmConfigId, params).finally(() => {
     status.value = 'more'
   })
   dataList.value = dataList.value.concat(res.data)

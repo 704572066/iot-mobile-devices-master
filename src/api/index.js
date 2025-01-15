@@ -45,8 +45,8 @@ export const getDeviceDashboardHistoryChart = data =>
 export const getWarningList = data =>
   myHttps('post', baseUrl + `alarm/record/_query`, data)
 // 告警日志
-export const getWarningHistory = data =>
-  myHttps('post', baseUrl + `alarm/history/${data.alarmConfigId}/_query`, data)
+export const getWarningHistory = (alarmConfigId, data) =>
+  myHttps('post', baseUrl + `alarm/history/${alarmConfigId}/_query`, data)
 // code获取微信信息
 export const getWxInfo = data =>
   myHttps(
