@@ -38,6 +38,12 @@
 			}
 		},
 		{
+			"path": "pages/monitoring-center/device/device-address",
+			"style": {
+				"navigationBarTitleText": "硬件列表"
+			}
+		},
+		{
 			"path": "pages/monitoring-center/device/device-function",
 			"style": {
 				"navigationBarTitleText": "设备功能"

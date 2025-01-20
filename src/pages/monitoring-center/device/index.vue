@@ -40,17 +40,24 @@
 </template>
 <script setup>
 import { myStorage } from '@/utils/storage.js'
+import { onLoad, onPullDownRefresh } from '@dcloudio/uni-app'
 import { getDeviceList } from '@/api/index'
 import { ref, reactive } from 'vue'
+let address
+
 const queryParams = reactive({
   pageIndex: 1,
   pageSize: 10
 })
 let total = 0
 const dataList = ref([])
+onLoad(query => {
+  address = query.address
+  getList()
+})
 const getList = async () => {
   const userInfo = JSON.parse(myStorage.get('userInfo') || '{}')
-  const params = {
+  let params = {
     sorts: [{ name: 'createTime', order: 'desc' }],
     terms: [
       {
@@ -61,11 +68,30 @@ const getList = async () => {
       }
     ]
   }
+  if(address){
+	  params = {
+	    sorts: [{ name: 'createTime', order: 'desc' }],
+	    terms: [
+	      {
+	        type: 'and',
+	        value: userInfo.orgList?.length ? userInfo.orgList[0].id : undefined,
+	        termType: 'eq',
+	        column: 'orgId'
+	      },
+		  {
+		    type: 'and',
+		    value: address,
+		    termType: 'eq',
+		    column: 'deviceAddress'
+		  }
+	    ]
+	  }
+  }
   const res = await getDeviceList({ ...queryParams, ...params })
   dataList.value = res.data
   total = res.total
 }
-getList()
+// getList()
 let selectInfo = {}
 const goto = type => {
   if (type === 1) {

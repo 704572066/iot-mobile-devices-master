@@ -24,7 +24,8 @@ import { ref } from 'vue'
 const dataList = [
   {
     name: '硬件列表',
-    url: '/pages/monitoring-center/device/index',
+    // url: '/pages/monitoring-center/device/index',
+	url: '/pages/monitoring-center/device/device-address',
     icon: 'list'
   },
   {

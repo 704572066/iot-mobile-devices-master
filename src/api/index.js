@@ -23,6 +23,9 @@ export const getDeviceList = data =>
 // 设备详情
 export const getDeviceDetail = id =>
   myHttps('get', baseUrl + `device-instance/${id}/detail`)
+// 设备地址分类
+export const getDeviceAddressCategory = orgId =>
+  myHttps('get', baseUrl + `device-instance/${orgId}/address-category`)
 // 设备运行情况
 export const getDeviceDashboard = data =>
   myHttps('post', baseUrl + `dashboard/_multi`, data)
