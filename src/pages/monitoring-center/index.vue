@@ -18,7 +18,8 @@
   </view>
 </template>
 <script setup>
-import { getWarningList } from '@/api/index'
+import { getWarningList, getWarningListByOrgId } from '@/api/index'
+import { myStorage } from '@/utils/storage.js'
 import { onShow } from '@dcloudio/uni-app'
 import { ref } from 'vue'
 const dataList = [
@@ -51,7 +52,7 @@ const dataList = [
 ]
 const total = ref(0)
 const getData = async () => {
-  const params = {
+  let params = {
     pageIndex: 1,
     pageSize: 10,
     sorts: [{ name: 'alarmTime', order: 'desc' }],
@@ -68,7 +69,21 @@ const getData = async () => {
       }
     ]
   }
-  const res = await getWarningList(params)
+  const userInfo = JSON.parse(myStorage.get('userInfo') || '{}')
+  let res
+  // const res = await getWarningList(params)
+  if(userInfo.isAdmin) {
+  	  res = await getWarningList(params)
+  }
+  else {
+  	  params.terms.push({
+        type: 'and',
+        value: userInfo.orgList?.length ? userInfo.orgList[0].id : undefined,
+        termType: 'eq',
+        column: 'orgId'
+      })
+  	  res = await getWarningListByOrgId(params)
+  }
   total.value = res.total
 }
 const goto = url => {

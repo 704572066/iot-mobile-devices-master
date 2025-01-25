@@ -19,7 +19,7 @@
 </template>
 <script setup>
 import { myStorage } from '@/utils/storage.js'
-import { getAlarmLevelConfig, getWarningList } from '@/api/index'
+import { getAlarmLevelConfig, getWarningList, getWarningListByOrgId } from '@/api/index'
 import { ref, reactive, onMounted } from 'vue'
 import { onLoad, onPullDownRefresh } from '@dcloudio/uni-app'
 import NoData from '@/components/noData.vue'
@@ -42,7 +42,8 @@ const type = ref('normal')
 const noData = ref(true)
 onLoad(query => {
   type.value = query.type
-  const params = {
+  const userInfo = JSON.parse(myStorage.get('userInfo') || '{}')
+  let params = {
     pageIndex: 1,
     pageSize: 9999,
     sorts: [{ name: 'alarmTime', order: 'desc' }],
@@ -62,7 +63,15 @@ onLoad(query => {
             }
           ]
   }
-  Promise.all([getAlarmLevelConfig(), getWarningList(params)]).then(res => {
+  if(!userInfo.isAdmin) {
+  	  params.terms.push({
+        type: 'and',
+        value: userInfo.orgList?.length ? userInfo.orgList[0].id : undefined,
+        termType: 'eq',
+        column: 'orgId'
+      })
+  }
+  Promise.all([getAlarmLevelConfig(), userInfo.isAdmin?getWarningList(params):getWarningListByOrgId(params)]).then(res => {
     const data1 = res[0].levels
     const data2 = res[1].data
     const arr = []

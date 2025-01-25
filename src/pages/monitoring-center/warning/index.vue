@@ -51,7 +51,7 @@
 </template>
 <script setup>
 import { myStorage } from '@/utils/storage.js'
-import { getWarningList } from '@/api/index'
+import { getWarningList, getWarningListByOrgId } from '@/api/index'
 import { ref, reactive, onMounted } from 'vue'
 import { onLoad, onPullDownRefresh } from '@dcloudio/uni-app'
 import dayjs from 'dayjs'
@@ -64,8 +64,8 @@ const dataList = ref([])
 const status = ref('more')
 const getData = async () => {
   if (status.value == 'nomore') return
-  // const userInfo = JSON.parse(myStorage.get('userInfo') || '{}')
-  const params = {
+  const userInfo = JSON.parse(myStorage.get('userInfo') || '{}')
+  let params = {
     pageIndex: queryParams.pageIndex,
     pageSize: queryParams.pageSize,
     sorts: [{ name: 'alarmTime', order: 'desc' }],
@@ -103,9 +103,23 @@ const getData = async () => {
           ]
   }
   status.value = 'loading'
-  const res = await getWarningList(params).finally(() => {
-    status.value = 'more'
-  })
+  let res
+  if(userInfo.isAdmin) {
+	  res = await getWarningList(params).finally(() => {
+		status.value = 'more'
+	  })
+  }
+  else {
+	  params.terms.push({
+        type: 'and',
+        value: userInfo.orgList?.length ? userInfo.orgList[0].id : undefined,
+        termType: 'eq',
+        column: 'orgId'
+      })
+	  res = await getWarningListByOrgId(params).finally(() => {
+	  		status.value = 'more'
+	  })
+  }
   dataList.value = dataList.value.concat(res.data)
   if (dataList.value.length >= res.total) {
     status.value = 'nomore'

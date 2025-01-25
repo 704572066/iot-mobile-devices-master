@@ -47,6 +47,11 @@ export const getDeviceDashboardHistoryChart = data =>
 // 告警记录
 export const getWarningList = data =>
   myHttps('post', baseUrl + `alarm/record/_query`, data)
+  
+// 通过用户所属组织过滤告警记录
+export const getWarningListByOrgId = data =>
+  myHttps('post', baseUrl + `alarm/record/_query_native`, data)
+
 // 告警日志
 export const getWarningHistory = (alarmConfigId, data) =>
   myHttps('post', baseUrl + `alarm/history/${alarmConfigId}/_query`, data)

@@ -41,6 +41,7 @@ export default {
       longitude: 120,
       scale: 14, // 设置地图的缩放级别
 	  minScale: 4.5,
+	  markers: [],
     //   markers: [ // 设置标记点
     //     {
 		  // id: 1,
@@ -71,6 +72,7 @@ export default {
   },
   onReady() {
       this._mapContext = uni.createMapContext("map", this);
+	  // this._mapContext = wx.createMapContext("map");
   },
   methods: {
 	  async getList(){
@@ -88,16 +90,17 @@ export default {
 	    }
 	    const res = await getDeviceList({ ...params })
 		// console.log(res.data)
+		let currentId = 0;
 		const result = res.data.filter(item => item.geoPoint).map(item1 => {
 		  const [longitude, latitude] = item1.geoPoint.split(',');
 		  const longitudeNum = parseFloat(longitude);
 		  const latitudeNum = parseFloat(latitude);
 		  return {
-				id: 0,
+				id: item1.id,
 				latitude: latitudeNum,
 				longitude: longitudeNum,
 				iconPath: '/static/zhengchangdianwei.png',   
-				width: 18,
+				width: 23,
 				height: 23, 
 				alpha: 1,   //透明度
 				callout: {  //自定义标记点上方的气泡窗口 点击有效
@@ -108,6 +111,7 @@ export default {
 					padding: 5,
 					bgColor: '#3f94fd',//背景颜色
 					display: 'ALWAYS',//常显
+					// display: 'BYCLICK',
 				}
 			};
 		});
@@ -170,14 +174,40 @@ export default {
 	  },
 	   // 地图视野变化
 	  onViewChange(e) {
+		let that = this;
 		if (e.type == 'end') { // 仅获取结束坐标
+			this._mapContext = uni.createMapContext('map');
 			this._mapContext.getCenterLocation({
-				success: res => {
-					this.longitude = res.longitude; // 中心经度
-					this.latitude = res.latitude; // 中心纬度
+				success(res) {
+					const latitude = res.latitude
+					const longitude = res.longitude
+	
+					if ((that.longitude - longitude) < 0.000005 && (that.longitude - longitude) > 0 &&
+						latitude == that.latitude) { // 对静态移动标点做限制防止偏移
+						return
+					}
+					if (that.scrollTimer) { // 设置节流，进一步限制高频触发
+						clearTimeout(that.scrollTimer);
+					}
+					that.scrollTimer = setTimeout(() => {
+						that.latitude = latitude
+						that.longitude = longitude
+						that.latitude = res.latitude;
+						that.longitude = res.longitude;
+						// that.getMapHouses(res.longitude, res.latitude); // 请求区域内存在数据
+					}, 1500)
 				}
-			});
+			})
+		} else { // begin
 		}
+		// if (e.type == 'end') { // 仅获取结束坐标
+		// 	this._mapContext.getCenterLocation({
+		// 		success: res => {
+		// 			this.longitude = res.longitude; // 中心经度
+		// 			this.latitude = res.latitude; // 中心纬度
+		// 		}
+		// 	});
+		// }
 	  },
 	  //设置地图缩放等级
 	  	updateMapScale(type, level){
