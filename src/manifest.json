@@ -136,7 +136,8 @@
             "scope.userLocation" : {
                 "desc" : "地图定位"
             }
-        }
+        },
+        "requiredPrivateInfos" : [ "getLocation" ]
     },
     "mp-alipay" : {
         "usingComponents" : true

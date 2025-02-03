@@ -95,9 +95,12 @@ const getList = async () => {
 let selectInfo = {}
 const goto = type => {
   if (type === 1) {
-    uni.navigateTo({
-      url: `/pages/monitoring-center/device/device-detail?id=${selectInfo.id}`
-    })
+    // uni.navigateTo({
+    //   url: `/pages/monitoring-center/device/device-detail?id=${selectInfo.id}`
+    // })
+	uni.navigateTo({
+	  url: `/pages/monitoring-center/device/device-channel?id=${selectInfo.id}`
+	})
   } else {
     uni.navigateTo({
       url: `/pages/monitoring-center/device/device-function?id=${selectInfo.id}`

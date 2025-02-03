@@ -70,8 +70,13 @@ export default {
   	this.getUserLocation();
   	this.getList();
   },
+  onLoad() {
+	  this.getUserLocation();
+	  this.getList();
+  },
   onReady() {
       this._mapContext = uni.createMapContext("map", this);
+	  this.getUserLocation();
 	  // this._mapContext = wx.createMapContext("map");
   },
   methods: {
@@ -181,21 +186,23 @@ export default {
 				success(res) {
 					const latitude = res.latitude
 					const longitude = res.longitude
-	
+					
 					if ((that.longitude - longitude) < 0.000005 && (that.longitude - longitude) > 0 &&
 						latitude == that.latitude) { // 对静态移动标点做限制防止偏移
 						return
 					}
-					if (that.scrollTimer) { // 设置节流，进一步限制高频触发
-						clearTimeout(that.scrollTimer);
-					}
-					that.scrollTimer = setTimeout(() => {
-						that.latitude = latitude
-						that.longitude = longitude
-						that.latitude = res.latitude;
-						that.longitude = res.longitude;
-						// that.getMapHouses(res.longitude, res.latitude); // 请求区域内存在数据
-					}, 1500)
+					that.latitude = latitude
+					that.longitude = longitude
+					// if (that.scrollTimer) { // 设置节流，进一步限制高频触发
+					// 	clearTimeout(that.scrollTimer);
+					// }
+					// that.scrollTimer = setTimeout(() => {
+					// 	that.latitude = latitude
+					// 	that.longitude = longitude
+					// 	that.latitude = res.latitude;
+					// 	that.longitude = res.longitude;
+					// 	// that.getMapHouses(res.longitude, res.latitude); // 请求区域内存在数据
+					// }, 1500)
 				}
 			})
 		} else { // begin

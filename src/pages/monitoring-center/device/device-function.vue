@@ -47,24 +47,38 @@
         @click="handleSubmit">
         执行
       </button>
+	  <button
+	    v-if="videoId !==''"
+	    class="submit-btn"
+	    form-type="submit"
+	    type="primary"
+	    @click.stop="openVideo">
+	    查看监控
+	  </button>
     </view>
   </view>
 </template>
 <script setup>
-import { getDeviceDetail, setDeviceFunction } from '@/api/index'
+import { getDeviceDetail, setDeviceFunction, getMonitoringDetail } from '@/api/index'
 import { ref, reactive, onMounted } from 'vue'
 import { onLoad, onPullDownRefresh } from '@dcloudio/uni-app'
+import URL from '@/utils/url.js'
+// import { getMonitoringList, getMonitoringDetail } from '@/api/index'
 let id
+// let videoId
 onLoad(query => {
   id = query.id
+  // videoId = query.videoId
   getDetail()
 })
 const formData = ref([{}])
 const dataList = ref([])
 const selectIndex = ref(0)
+const videoId = ref('')
 const getDetail = async () => {
   const res = await getDeviceDetail(id)
   dataList.value = JSON.parse(res.metadata)?.functions
+  videoId.value = res.videoId
 }
 const changeSelect = index => {
   selectIndex.value = index
@@ -93,6 +107,23 @@ const handleSubmit = async () => {
     }
   })
 }
+const openVideo = async () => {
+	    // console.log(val)
+		const res = await getMonitoringDetail(videoId.value)
+		const channelNo = 1
+		const parsedUrl = new URL(res.streamUrl)
+		// console.log(res.streamUrl)
+		// console.log(parsedUrl)
+		const deviceSerial = videoId
+		// 获取 search 参数中的 accessToken
+		const accessToken = parsedUrl.params.accessToken
+		// console.log(accessToken)
+		uni.openEmbeddedMiniProgram({
+			appId: 'wxf2b3a0262975d8c2',
+			path: '/pages/live/live?accessToken='+accessToken+'&deviceSerial='+deviceSerial+'&channelNo=1'
+		})
+}
+
 </script>
 <style lang="scss" scoped>
 .content {

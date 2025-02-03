@@ -21,8 +21,12 @@ import { getDeviceDetail, getDeviceDashboard } from '@/api/index'
 import { ref, reactive, onMounted } from 'vue'
 import { onLoad, onPullDownRefresh } from '@dcloudio/uni-app'
 let id
+let groupName
+// let ids
 onLoad(query => {
   id = query.id
+  groupName = query.groupName
+  // ids = query.ids
   getDetail()
 })
 const queryParams = reactive({
@@ -32,7 +36,7 @@ const queryParams = reactive({
 const dataList = ref([])
 const getDetail = async () => {
   const res = await getDeviceDetail(id)
-  dataList.value = JSON.parse(res.metadata)?.properties.filter(item => item.expands.isDisplay===true)
+  dataList.value = JSON.parse(res.metadata)?.properties.filter(item => item.expands.isDisplay===true && item.expands.groupName === groupName)
   const params = {
     dashboard: 'device',
     dimension: 'history',
@@ -44,6 +48,17 @@ const getDetail = async () => {
       properties: dataList.value.map(item => item.id)
     }
   }
+  // const params = {
+  //   dashboard: 'device',
+  //   dimension: 'history',
+  //   measurement: 'properties',
+  //   object: productId,
+  //   params: {
+  //     deviceId: id,
+  //     history: 1,
+  //     properties: ids
+  //   }
+  // }
   getDashboard(params)
 }
 const getDashboard = async params => {

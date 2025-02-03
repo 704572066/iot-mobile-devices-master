@@ -19,11 +19,11 @@
             >[{{ item.state?.text }}]</text
           > -->
           <button
-            v-if="
-              item?.state?.text === '告警中' &&
-              type === 'warning' &&
-              item.fireInvoke
-            "
+           v-if="
+			 item?.state?.text === '告警中' &&
+			 type === 'warning' &&
+			 item.fireInvoke
+		   "
             @click.stop="toFun(item)"
             type="primary"
             class="action-btn"
