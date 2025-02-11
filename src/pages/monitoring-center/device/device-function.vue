@@ -114,7 +114,7 @@ const openVideo = async () => {
 		const parsedUrl = new URL(res.streamUrl)
 		// console.log(res.streamUrl)
 		// console.log(parsedUrl)
-		const deviceSerial = videoId
+		const deviceSerial = videoId.value
 		// 获取 search 参数中的 accessToken
 		const accessToken = parsedUrl.params.accessToken
 		// console.log(accessToken)

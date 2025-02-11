@@ -2,7 +2,7 @@
   <view class="content">
 	  <template v-for="(item, index) in dataList">
 	    <view
-	      
+	      v-if="item.ids.length>0"
 	      class="item-box"
 	      @click="goto(item)">
 	      <view class="head">
@@ -68,7 +68,9 @@ const getDetail = async () => {
           }
           
           // 将 id 添加到对应的组中
-          acc[groupName].ids.push(property.id);
+		  if (property.expands.isDisplay === true) {
+			acc[groupName].ids.push(property.id);
+		  }
 		  // acc[groupName].deviceId = res.id;
 		  // acc[groupName].productId = res.productId;
   
@@ -77,6 +79,7 @@ const getDetail = async () => {
   if(dataList.value.length==0){
 	    noData.value = true
   }
+  console.log(dataList.value);
   
         // 返回一个数组，只包含 groupName 和 ids
         // return Object.values(groups);
