@@ -75,7 +75,7 @@ const getDashboard = async params => {
 }
 const goto = type => {
   uni.navigateTo({
-    url: `/pages/monitoring-center/device/device-history?id=${id}&type=${type}`
+    url: `/pages/monitoring-center/device/device-history-ucharts?id=${id}&type=${type}`
   })
 }
 </script>

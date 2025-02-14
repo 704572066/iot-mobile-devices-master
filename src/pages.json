@@ -68,6 +68,12 @@
 			}
 		},
 		{
+			"path": "pages/monitoring-center/device/device-history-ucharts",
+			"style": {
+				"navigationBarTitleText": "历史数据-ucharts"
+			}
+		},
+		{
 			"path": "pages/monitoring-center/warning/warning-level",
 			"style": {
 				"navigationBarTitleText": "报警等级"
