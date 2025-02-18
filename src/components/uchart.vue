@@ -29,6 +29,7 @@
 		            dataPointShape: false,
 		            legend: {
 		                // 图例位置和颜色
+						show: false,  // 隐藏图例
 		                position: 'top',
 		                float: 'right',
 		                padding: 20,
@@ -42,6 +43,7 @@
 		                itemCount: 7,
 		                axisLine: false,
 		                fontSize: 10,
+						interval: 'auto',
 		                // 滚动条颜色
 		                scrollColor: '#666',
 		                scrollBackgroundColor: '#333'
@@ -76,7 +78,7 @@
 		        // 数据处理
 		        let categories = []
 		        let aData = [];
-		        const format = 3 === this.type ? 'day' : 'hour'
+		        const format = 3 === this.type ? 'minute' : 'hour'
 		        this.reports.forEach(item => {
 		            categories.push(this.timeFormat(item.timestamp, format)) 
 		            aData.push(item.value)
@@ -84,7 +86,7 @@
 		        let res = {
 		            categories: categories,
 		            series: [{
-		                    name: "成交量a",
+		                    name: "值",
 		                    setShadow: [
 		                        3,
 		                        15,
@@ -102,7 +104,7 @@
 		    },
 		    timeFormat(timeStamp, type = "") {
 		        var date = new Date();
-		        date.setTime(timeStamp * 1000);
+		        date.setTime(timeStamp);
 		        var y = date.getFullYear();
 		        var m = date.getMonth() + 1;
 		        m = m < 10 ? ('0' + m) : m;
@@ -120,6 +122,9 @@
 		        if (type == 'hour') {
 		            return h + ':00' ;
 		        }
+				if (type == 'minute') {
+				    return   h + ':'+ minute+":"+second;
+				}
 		        return ''
 		    },
 		},

@@ -62,9 +62,6 @@ importers:
       dayjs:
         specifier: ^1.11.13
         version: 1.11.13
-      echarts:
-        specifier: ^5.5.1
-        version: 5.5.1
       sass:
         specifier: ^1.77.8
         version: 1.77.8
@@ -1928,9 +1925,6 @@ packages:
     resolution: {integrity: sha512-yxJ2mFy/sibVQlu5qHjOkf9J3K6zgmCxgJ94u2EdvDOV09H+32LtRswEcUsmUWN72pVLOEnTSRaIVVzVQgS0dg==, tarball: https://registry.npmmirror.com/domexception/-/domexception-2.0.1.tgz}
     engines: {node: '>=8'}
     deprecated: Use your platform's native DOMException instead
-
-  echarts@5.5.1:
-    resolution: {integrity: sha512-Fce8upazaAXUVUVsjgV6mBnGuqgO+JNDlcgF79Dksy4+wgGpQB2lmYoO4TSweFg/mZITdpGHomw/cNBJZj1icA==}
 
   ee-first@1.1.1:
     resolution: {integrity: sha512-WMwm9LhRUo+WUaRN+vRuETqG89IgZphVSNkdFgeb6sS/E4OrDIN7t48CAewSHXc6C8lefD8KKfr5vY61brQlow==}
@@ -6162,11 +6156,6 @@ snapshots:
   domexception@2.0.1:
     dependencies:
       webidl-conversions: 5.0.0
-
-  echarts@5.5.1:
-    dependencies:
-      tslib: 2.3.0
-      zrender: 5.6.0
 
   ee-first@1.1.1: {}
 

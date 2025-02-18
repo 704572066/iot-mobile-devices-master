@@ -61,12 +61,12 @@
 				"navigationBarTitleText": "硬件通道"
 			}
 		},
-		{
-			"path": "pages/monitoring-center/device/device-history",
-			"style": {
-				"navigationBarTitleText": "历史数据"
-			}
-		},
+		// {
+		// 	"path": "pages/monitoring-center/device/device-history",
+		// 	"style": {
+		// 		"navigationBarTitleText": "历史数据"
+		// 	}
+		// },
 		{
 			"path": "pages/monitoring-center/device/device-history-ucharts",
 			"style": {

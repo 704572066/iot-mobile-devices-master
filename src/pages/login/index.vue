@@ -1,9 +1,8 @@
 <template>
   <view class="content">
-    <image
-      class="login-bg"
-      src="@/static/login-bg.png"
-      alt=""></image>
+	      <!-- 圆形公司 logo -->
+	<image class="logo" src="@/static/botlogo.jpg" alt="Company Logo" />
+	<view class="gradient-view"></view>
     <uni-forms
       ref="formRef"
       :modelValue="params"
@@ -56,7 +55,7 @@
         <view class="submit-btn">
           <button
             form-type="submit"
-            type="primary"
+			class="custom-button"
             @click="loginFun">
             登录
           </button>
@@ -131,9 +130,19 @@ const loginFun = async () => {
   width: 100%;
   height: 100vh;
   padding: 36rpx;
-  padding-top: 20%;
+  padding-top: 50%;
   // background: url('/static/login-bg.png');
   // background-size: contain;
+  .logo {
+    position: absolute;
+    top: 20%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 150rpx; /* 设置logo的宽度 */
+    height: 150rpx; /* 设置logo的高度 */
+    border-radius: 50%; /* 圆形效果 */
+    border: 4rpx solid white; /* 可选：为logo添加白色边框 */
+  }
   .login-bg {
     position: absolute;
     top: 0;
@@ -142,16 +151,48 @@ const loginFun = async () => {
     width: 100%;
     z-index: -1;
   }
+  //   .gradient-view {
+		// position: absolute;
+		// top: 0;
+		// left: 0;
+  //        height: 100vh;
+  //        width: 100%;
+		//   z-index: -1;
+  //        background: linear-gradient(to bottom left, #f00, #0f0, #00f);
+  //      }
+  .gradient-view {
+    position: absolute;              /* 绝对定位 */
+    top: 0;
+    left: 0;
+    height: 100vh;                   /* 高度为视口高度 */
+    width: 100%;                     /* 宽度为视口宽度 */
+    z-index: -1;                     /* 背景放在内容后面 */
+    background: 
+      linear-gradient(to bottom, #0492dc 0%, transparent 50%),   /* 淡天蓝色到透明的渐变 */
+    #f4f7f7;    /* 天蓝色到透明的渐变 */
+    background-size: 100% 200%;      /* 背景尺寸调整，控制波浪的频率和高度 */
+    background-position: 0 0, 0 0; /* 渐变的位置设置，两个背景交错 */
+  }
+
   .login-form {
     border-radius: 16rpx;
     padding: 36rpx;
-    background: #fff;
+	background: #fff;
+	margin-top: 220rpx;
   }
   .mt40 {
     margin-top: 40rpx;
   }
   .submit-btn {
     margin-top: 128rpx;
+	background-color: #0492dc;
+	border-radius: 16rpx;
+	.custom-button {
+	  background-color: #0492dc; /* 自定义背景色 */
+	  color: white; /* 自定义字体色 */
+	  border-color: #0492dc; /* 自定义边框色，如果需要的话 */
+	  border-radius: 16rpx;
+	}
   }
 }
 .code-view {

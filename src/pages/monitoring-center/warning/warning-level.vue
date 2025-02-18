@@ -6,12 +6,12 @@
         class="item-box"
         :key="item.name"
         @click="goto(item)">
-        <view class="head">
+       <!-- <view class="head"> -->
           <image
             class="img-40"
             :src="imgList[index]"></image>
           {{ item.title }}
-        </view>
+        <!-- </view> -->
       </view>
     </template>
     <no-data v-if="noData"></no-data>
@@ -90,31 +90,40 @@ onLoad(query => {
 </script>
 <style lang="scss" scoped>
 .content {
-  // padding: 40rpx;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  padding: 0 48rpx;
   .item-box {
-    // width: 100%;
+    margin-top: 40rpx;
+    width: 300rpx;
+    height: 200rpx;
     flex-shrink: 0;
     background: #ffffff;
     box-shadow: 0px 1px 8px 0px rgba(109, 155, 212, 0.3);
     border-radius: 8px;
     display: flex;
     flex-flow: column;
-    margin: 40rpx 40rpx 0rpx 40rpx;
-  }
-  .head {
-    height: 96rpx;
-    line-height: 96rpx;
-    padding: 0 24rpx;
-    display: flex;
     align-items: center;
-    .action-btn {
-      margin-left: auto;
-      margin-right: 0;
+    justify-content: center;
+    position: relative;
+    .total-num {
+      position: absolute;
+      right: -12rpx;
+      top: -12rpx;
+      background: red;
+      color: #ffffff;
+      text-align: center;
+      border-radius: 50%;
+      width: 36rpx;
+      height: 38rpx;
+      font-size: 24rpx;
+      line-height: 36rpx;
     }
   }
   .img-40 {
-    height: 80rpx;
-    width: 80rpx;
-  }
+      height: 70rpx;
+      width: 70rpx;
+    }
 }
 </style>

@@ -72,14 +72,17 @@ const changeSelect = name => {
   if (name === '一小时') {
     queryParams.startTime = dayjs().subtract(1, 'hour').valueOf()
     queryParams.endTime = dayjs().valueOf()
+	timeType.value = 3
   }
   if (name === '一天') {
     queryParams.startTime = dayjs().subtract(1, 'day').valueOf()
     queryParams.endTime = dayjs().valueOf()
+	timeType.value = 3
   }
   if (name === '一周') {
     queryParams.startTime = dayjs().subtract(7, 'day').valueOf()
     queryParams.endTime = dayjs().valueOf()
+	timeType.value = 3
   }
   // if (name === '本月') {
   //   queryParams.startTime = dayjs().startOf('month').valueOf()
