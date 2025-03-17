@@ -40,14 +40,24 @@ const dataList = [
 	url: '/pages/monitoring-center/device/device-address',
     icon: 'list'
   },
+  // {
+  //   name: '当前告警',
+  //   url: '/pages/monitoring-center/warning/warning-level?type=warning',
+  //   icon: 'notification-filled'
+  // },
   {
     name: '当前告警',
-    url: '/pages/monitoring-center/warning/warning-level?type=warning',
+    url: '/pages/monitoring-center/warning/index?type=warning',
     icon: 'notification-filled'
   },
+  // {
+  //   name: '历史告警',
+  //   url: '/pages/monitoring-center/warning/warning-level?type=normal',
+  //   icon: 'notification-filled'
+  // },
   {
     name: '历史告警',
-    url: '/pages/monitoring-center/warning/warning-level?type=normal',
+    url: '/pages/monitoring-center/warning/index?type=normal',
     icon: 'notification-filled'
   },
   {

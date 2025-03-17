@@ -1,5 +1,18 @@
 <template>
   <view class="content">
+	  <!-- 时间选择器 -->
+	<view v-if="type==='normal'">
+	  		
+	      <uni-datetime-picker
+	        start-placeholder="请选择开始时间"
+			end-placeholder="请选择结束时间"
+			type="datetimerange"
+			v-model="dateRange"
+	      ></uni-datetime-picker>
+	  
+	      <!-- 搜索按钮 -->
+	      <button @click="search()">搜索</button>
+	</view>
     <scroll-view
       style="height: 100vh"
       scroll-y
@@ -7,8 +20,7 @@
       <view
         class="item-box"
         v-for="item in dataList"
-        :key="item.name"
-        @click="goto(item)">
+        :key="item.name">
         <view class="head">
           {{ item.targetName || item.alarmName }}
           <!-- <text
@@ -33,12 +45,17 @@
         </view>
         <view class="info">
           <view class="values">{{ item.alarmName || '--' }}</view>
-          <view class="times">告警描述 </view>
-          <view class="times2">{{ item.description }}</view>
-          <view class="times">最近告警时间 </view>
-          <view class="times2">{{
+          <!-- <view class="times">告警描述:  </view>
+          <view class="times2">{{ item.description }}</view> -->
+          <!-- <view class="times">最近告警时间:  {{
             dayjs(item.alarmTime).format('YYYY-MM-DD HH:mm:ss')
-          }}</view>
+          }} </view> -->
+		  <view class="times">{{
+		    dayjs(item.alarmTime).format('YYYY-MM-DD HH:mm:ss')
+		  }} </view>
+          <!-- <view class="times2">{{
+            dayjs(item.alarmTime).format('YYYY-MM-DD HH:mm:ss')
+          }}</view> -->
         </view>
       </view>
       <uni-load-more
@@ -57,11 +74,14 @@ import { onLoad, onPullDownRefresh } from '@dcloudio/uni-app'
 import dayjs from 'dayjs'
 
 const queryParams = reactive({
-  pageIndex: 1,
+  pageIndex: 0,
   pageSize: 10
 })
 const dataList = ref([])
 const status = ref('more')
+// const datePickerRefs = ref<any>(null);
+
+const dateRange = ref([])
 const getData = async () => {
   if (status.value == 'nomore') return
   const userInfo = JSON.parse(myStorage.get('userInfo') || '{}')
@@ -102,6 +122,20 @@ const getData = async () => {
             }
           ]
   }
+  if(dateRange.value.length>1){
+	  params.terms[0].terms.push({
+        type: "or",
+        value: dateRange.value[0],
+        termType: "gt",
+        column: "alarmTime"
+      })
+	  params.terms[0].terms.push({
+	    type: "and",
+	    value: dateRange.value[1],
+	    termType: "lt",
+	    column: "alarmTime"
+	  })
+  }
   status.value = 'loading'
   let res
   if(userInfo.isAdmin) {
@@ -124,6 +158,10 @@ const getData = async () => {
   if (dataList.value.length >= res.total) {
     status.value = 'nomore'
   }
+  else{
+	queryParams.pageIndex++
+	status.value = 'more'
+  }
 }
 const goto = val => {
   uni.navigateTo({
@@ -143,6 +181,13 @@ onLoad(query => {
   level.value = query.level
   getData()
 })
+const search = async () => {
+	dataList.value=[]
+	queryParams.pageIndex=0
+	status.value = 'loading'
+	getData()
+	
+}
 </script>
 <style lang="scss" scoped>
 .content {

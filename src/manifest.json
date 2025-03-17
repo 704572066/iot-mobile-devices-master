@@ -129,7 +129,9 @@
         "appid" : "wxe861fc6383450e16",
         "setting" : {
             "urlCheck" : false,
-            "minified" : true
+            "minified" : true,
+            "ignoreDevUnusedFiles" : false,
+            "ignoreUploadUnusedFiles" : false
         },
         "usingComponents" : true,
         "permission" : {
