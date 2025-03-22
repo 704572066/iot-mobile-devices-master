@@ -26,6 +26,30 @@
 			}
 		},
 		{
+			"path": "pages/mine/private",
+			"style": {
+				"navigationBarTitleText": "隐私条款"
+			}
+		},
+		{
+			"path": "pages/mine/setting",
+			"style": {
+				"navigationBarTitleText": "系统设置"
+			}
+		},
+		{
+			"path": "pages/mine/qrcode",
+			"style": {
+				"navigationBarTitleText": "关注服务号"
+			}
+		},
+		{
+			"path": "pages/mine/help",
+			"style": {
+				"navigationBarTitleText": "帮助中心"
+			}
+		},
+		{
 			"path": "pages/monitoring-center/index",
 			"style": {
 				"navigationBarTitleText": "监控中心"
@@ -34,13 +58,13 @@
 		{
 			"path": "pages/monitoring-center/device/index",
 			"style": {
-				"navigationBarTitleText": "硬件列表"
+				"navigationBarTitleText": "设备列表"
 			}
 		},
 		{
 			"path": "pages/monitoring-center/device/device-address",
 			"style": {
-				"navigationBarTitleText": "硬件列表"
+				"navigationBarTitleText": "设备分组"
 			}
 		},
 		{
@@ -94,7 +118,7 @@
 		{
 			"path": "pages/monitoring-center/maps/index",
 			"style": {
-				"navigationBarTitleText": "硬件地图"
+				"navigationBarTitleText": "设备定位"
 			}
 		},
 		{

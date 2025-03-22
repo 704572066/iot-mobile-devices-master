@@ -1,166 +1,26 @@
 <template>
-  <view class="content">
-	  <view class="item-box-top">
-	    <image
-	      class="bg"
-	      src="@/static/bg.png"
-	      alt=""></image>
-	  	<view class="text-overlay">{{ userInfo.name }}</view>
-	  </view> 
+  <view class="content"> 
+  <view class="item-box-top">
+	  	    <image
+	  	      class="bg"
+	  	      src="@/static/qrcode_for_ts.jpg"
+	  	      alt=""></image>
+			  </view>
+	  	    <view class="item-box-top">请截图保存图片扫码关注服务号以正常接收告警通知, 或直接搜索“同盛自动灭火”关注。</view>
   </view>
-  <view class="content2">
-		<view class="item-box">
-			<view class="item-box3">
-			<view>{{deviceNum}}</view>
-			设备数量
-			</view>
-			<view class="item-box3">
-			<view>{{alarmNum}}</view>
-			告警数量
-			</view>
-		</view>
-		<view class="item-box2" @click="goto('/pages/mine/qrcode')">
-			<uni-icons
-			  color="#0492dc"
-			  type="notification-filled"
-			  size="30"></uni-icons>
-			关注服务号
-		</view>
-		<view class="item-box2" @click="goto('/pages/mine/help')">
-			<uni-icons
-			  color="#0492dc"
-			  type="notification-filled"
-			  size="30"></uni-icons>
-			帮助中心
-		</view>
-  </view>
-			
-  <view class="content3">
-    	  <view class="item-box" @click="goto('/pages/monitoring-center/warning/index?type=normal')">
-			  <uni-icons
-			    color="#0492dc"
-			    type="notification-filled"
-			    size="30"></uni-icons>
-			  历史告警
-    	  </view>
-		  <view class="item-box" @click="goto('/pages/mine/private')">
-			  <uni-icons
-			    color="#0492dc"
-			    type="notification-filled"
-			    size="30"></uni-icons>
-			  隐私条款
-		  </view>
-		  <view class="item-box" @click="goto('/pages/mine/setting')">
-			  <uni-icons
-			    color="#0492dc"
-			    type="gear-filled"
-			    size="30"></uni-icons>
-			  账号操作
-		  </view> 
-  </view>
- <!-- <view class="btn">
-      <button
-        type="primary"
-        class="mb-40"
-        @click="handleEditPassword">
-        修改密码
-      </button>
-      <button
-        type="warn"
-        @click="logout">
-        退出登录
-      </button>
-  </view> -->
-  <uni-popup
-      ref="dialogRef"
-      type="dialog">
-      <uni-popup-dialog
-        title="修改密码"
-        before-close
-        @close="handleClose"
-        @confirm="confirm">
-        <uni-forms
-          ref="formRef"
-          :modelValue="params"
-          label-position="top"
-          class="form-content"
-          label-width="100%"
-          :border="true">
-          <uni-forms-item
-            label="旧密码"
-            name="oldPassword"
-            :required="true"
-            :rules="[
-              {
-                required: true,
-                errorMessage: '旧密码不能为空'
-              }
-            ]">
-            <input
-              type="password"
-              v-model="params.oldPassword"
-              :placeholder="`请输入旧密码`" />
-          </uni-forms-item>
-          <uni-forms-item
-            label="新密码"
-            name="newPassword"
-            :required="true"
-            :rules="[
-              {
-                required: true,
-                errorMessage: '新密码不能为空'
-              }
-            ]">
-            <input
-              type="password"
-              v-model="params.newPassword"
-              :placeholder="`请输入新密码`" />
-          </uni-forms-item>
-          <uni-forms-item
-            label="确认新密码"
-            name="verifyPassword"
-            :required="true"
-            :rules="[
-              {
-                required: true,
-                errorMessage: '确认新密码不能为空'
-              }
-            ]">
-            <input
-              type="password"
-              v-model="params.verifyPassword"
-              :placeholder="`请输入确认新密码`" />
-          </uni-forms-item>
-        </uni-forms>
-      </uni-popup-dialog>
-  </uni-popup>
 </template>
 
 <script setup>
 import { myStorage } from '@/utils/storage.js'
 import { editPassword } from '@/api/index'
-import { onLoad, onPullDownRefresh } from '@dcloudio/uni-app'
-// import { getWarningList, getWarningListByOrgId } from '@/api/index'
-import { getAlarmLevelConfig, getWarningList, getWarningListByOrgId, getDeviceAddressCategory } from '@/api/index'
-
 import { ref } from 'vue'
 const params = ref({})
-const deviceNum = ref(0)
-const alarmNum = ref(0)
 const userInfo = JSON.parse(myStorage.get('userInfo') || '{}')
-onLoad(query => {
-  getDeviceNum()
-  getAlarmNum()
-})
 const logout = () => {
   uni.clearStorageSync()
   uni.reLaunch({ url: '/pages/login/index' })
 }
-const goto = url => {
-  uni.navigateTo({
-    url
-  })
-}
+
 const dialogRef = ref()
 const handleEditPassword = () => {
   params.value = {}
@@ -187,91 +47,22 @@ const confirm = async () => {
 const handleClose = () => {
   dialogRef.value.close()
 }
-const getAlarmNum = async () => {
-  let params = {
-    pageIndex: 1,
-    pageSize: 10,
-    sorts: [{ name: 'alarmTime', order: 'desc' }],
-    terms: [
-      {
-        terms: [
-          {
-            type: 'or',
-            value: 'warning',
-            termType: 'eq',
-            column: 'state'
-          }
-        ]
-      }
-    ]
-  }
-  const userInfo = JSON.parse(myStorage.get('userInfo') || '{}')
-  let res
-  // const res = await getWarningList(params)
-  if(userInfo.isAdmin) {
-  	  res = await getWarningList(params)
-  }
-  else {
-  	  params.terms.push({
-        type: 'and',
-        value: userInfo.orgList?.length ? userInfo.orgList[0].id : undefined,
-        termType: 'eq',
-        column: 'orgId'
-      })
-  	  res = await getWarningListByOrgId(params)
-  }
-  alarmNum.value = res.total
-}
-const getDeviceNum = async () => {
-  const userInfo = JSON.parse(myStorage.get('userInfo') || '{}')
-  const params = {
-    sorts: [{ name: 'createTime', order: 'desc' }],
-    terms: [
-      {
-        type: 'and',
-        value: userInfo.orgList?.length ? userInfo.orgList[0].id : undefined,
-        termType: 'eq',
-        column: 'orgId'
-      }
-    ]
-  }
-  const res = await getDeviceAddressCategory(userInfo.orgList[0].id)
-  let total = 0
-  for(let i=0; i<res.length; i++){
-	  total = total + res[i].value
-  }
-  // console.log(total)
-  deviceNum.value = total
-  // if(res.length==1&&res[0].key==='其他'){
-	 //  uni.navigateTo({
-	 //    url: `/pages/monitoring-center/device/index`
-	 //  })
-  // }
-  // else{
-	 //  dataList.value = res
-	 //  if(res.length==0){
-		//   noData.value = true
-	 //  }
-  // }
-  // total = res.total
-}
-
 </script>
 <style lang="scss" scoped>
 
 .content {
-  // display: flex;
+  display: flex;
   justify-content: space-between;
-  // flex-wrap: wrap;
+  flex-wrap: wrap;
   align-items: center; /* 垂直居中 */
-  padding: 0 0rpx;
-  // margin-top: 40rpx;
+  padding: 0 66rpx;
+  margin-top: 80rpx;
   // background: #e6e6e6;
   
   .item-box-top {
     // margin-top: 20rpx;
     width: 100%;
-    height: 340rpx;
+    height: 100%;
     flex-shrink: 0;
     // background: #ffffff;
 	// background: url('/static/freepik__retouch__72762.png');
@@ -282,10 +73,10 @@ const getDeviceNum = async () => {
     align-items: center;
     justify-content: center;
     // position: relative;
-	image {
-		width: 100%;
-		clip-path: ellipse(90% 100% at 50% -4%);
-	}
+	// image {
+	// 	width: 100%;
+	// 	clip-path: ellipse(90% 100% at 50% -4%);
+	// }
 	.bg {
 	  // position: absolute;
 	  // top: 0;

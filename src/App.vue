@@ -58,4 +58,7 @@ view {
   box-sizing: border-box;
   /* 其他全局样式 */
 }
+page {
+	background-color: #f1efef;
+}
 </style>

@@ -1,75 +1,35 @@
 <template>
-  <view class="content">
-	  <view class="item-box-top">
-	    <image
-	      class="bg"
-	      src="@/static/bg.png"
-	      alt=""></image>
-	  	<view class="text-overlay">{{ userInfo.name }}</view>
-	  </view> 
-  </view>
-  <view class="content2">
-		<view class="item-box">
-			<view class="item-box3">
-			<view>{{deviceNum}}</view>
-			设备数量
-			</view>
-			<view class="item-box3">
-			<view>{{alarmNum}}</view>
-			告警数量
-			</view>
-		</view>
-		<view class="item-box2" @click="goto('/pages/mine/qrcode')">
-			<uni-icons
-			  color="#0492dc"
-			  type="notification-filled"
-			  size="30"></uni-icons>
-			关注服务号
-		</view>
-		<view class="item-box2" @click="goto('/pages/mine/help')">
-			<uni-icons
-			  color="#0492dc"
-			  type="notification-filled"
-			  size="30"></uni-icons>
-			帮助中心
-		</view>
-  </view>
-			
-  <view class="content3">
-    	  <view class="item-box" @click="goto('/pages/monitoring-center/warning/index?type=normal')">
-			  <uni-icons
-			    color="#0492dc"
-			    type="notification-filled"
-			    size="30"></uni-icons>
-			  历史告警
-    	  </view>
-		  <view class="item-box" @click="goto('/pages/mine/private')">
-			  <uni-icons
-			    color="#0492dc"
-			    type="notification-filled"
-			    size="30"></uni-icons>
-			  隐私条款
-		  </view>
-		  <view class="item-box" @click="goto('/pages/mine/setting')">
-			  <uni-icons
-			    color="#0492dc"
-			    type="gear-filled"
-			    size="30"></uni-icons>
-			  账号操作
-		  </view> 
-  </view>
- <!-- <view class="btn">
-      <button
-        type="primary"
-        class="mb-40"
-        @click="handleEditPassword">
-        修改密码
-      </button>
-      <button
-        type="warn"
-        @click="logout">
-        退出登录
-      </button>
+	
+	<view class="content3">
+	  	  <view class="item-box" @click="handleEditPassword">
+				  <uni-icons
+				    color="#0492dc"
+				    type="notification-filled"
+				    size="30"></uni-icons>
+				  修改密码
+	  	  </view>
+			  <view class="item-box" @click="logout">
+				  <uni-icons
+				    color="#0492dc"
+				    type="notification-filled"
+				    size="30"></uni-icons>
+				  退出登录
+			  </view>
+	</view>
+  <!-- <view>
+	  <view class="btn">
+	       <button
+	         type="primary"
+	         class="mb-40"
+	         @click="handleEditPassword">
+	         修改密码
+	       </button>
+	       <button
+	         type="warn"
+	         @click="logout">
+	         退出登录
+	       </button>
+	   </view>
   </view> -->
   <uni-popup
       ref="dialogRef"
@@ -139,28 +99,14 @@
 <script setup>
 import { myStorage } from '@/utils/storage.js'
 import { editPassword } from '@/api/index'
-import { onLoad, onPullDownRefresh } from '@dcloudio/uni-app'
-// import { getWarningList, getWarningListByOrgId } from '@/api/index'
-import { getAlarmLevelConfig, getWarningList, getWarningListByOrgId, getDeviceAddressCategory } from '@/api/index'
-
 import { ref } from 'vue'
 const params = ref({})
-const deviceNum = ref(0)
-const alarmNum = ref(0)
 const userInfo = JSON.parse(myStorage.get('userInfo') || '{}')
-onLoad(query => {
-  getDeviceNum()
-  getAlarmNum()
-})
 const logout = () => {
   uni.clearStorageSync()
   uni.reLaunch({ url: '/pages/login/index' })
 }
-const goto = url => {
-  uni.navigateTo({
-    url
-  })
-}
+
 const dialogRef = ref()
 const handleEditPassword = () => {
   params.value = {}
@@ -187,75 +133,6 @@ const confirm = async () => {
 const handleClose = () => {
   dialogRef.value.close()
 }
-const getAlarmNum = async () => {
-  let params = {
-    pageIndex: 1,
-    pageSize: 10,
-    sorts: [{ name: 'alarmTime', order: 'desc' }],
-    terms: [
-      {
-        terms: [
-          {
-            type: 'or',
-            value: 'warning',
-            termType: 'eq',
-            column: 'state'
-          }
-        ]
-      }
-    ]
-  }
-  const userInfo = JSON.parse(myStorage.get('userInfo') || '{}')
-  let res
-  // const res = await getWarningList(params)
-  if(userInfo.isAdmin) {
-  	  res = await getWarningList(params)
-  }
-  else {
-  	  params.terms.push({
-        type: 'and',
-        value: userInfo.orgList?.length ? userInfo.orgList[0].id : undefined,
-        termType: 'eq',
-        column: 'orgId'
-      })
-  	  res = await getWarningListByOrgId(params)
-  }
-  alarmNum.value = res.total
-}
-const getDeviceNum = async () => {
-  const userInfo = JSON.parse(myStorage.get('userInfo') || '{}')
-  const params = {
-    sorts: [{ name: 'createTime', order: 'desc' }],
-    terms: [
-      {
-        type: 'and',
-        value: userInfo.orgList?.length ? userInfo.orgList[0].id : undefined,
-        termType: 'eq',
-        column: 'orgId'
-      }
-    ]
-  }
-  const res = await getDeviceAddressCategory(userInfo.orgList[0].id)
-  let total = 0
-  for(let i=0; i<res.length; i++){
-	  total = total + res[i].value
-  }
-  // console.log(total)
-  deviceNum.value = total
-  // if(res.length==1&&res[0].key==='其他'){
-	 //  uni.navigateTo({
-	 //    url: `/pages/monitoring-center/device/index`
-	 //  })
-  // }
-  // else{
-	 //  dataList.value = res
-	 //  if(res.length==0){
-		//   noData.value = true
-	 //  }
-  // }
-  // total = res.total
-}
-
 </script>
 <style lang="scss" scoped>
 
@@ -325,7 +202,7 @@ const getDeviceNum = async () => {
   // flex-wrap: wrap;
   align-items: center; /* 垂直居中 */
   padding: 0 0rpx;
-  margin-top: 40rpx;
+  margin-top: 0rpx;
   // background: #e6e6e6;
   .item-box {
     margin-top: 0rpx;
@@ -476,6 +353,64 @@ const getDeviceNum = async () => {
 	  position: absolute;
 	  top: 55px;
 	  left: 48rpx;
+	  color: white;
+	  font-size: 14px;
+	  font-weight: normal;
+	  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5); /* 文字阴影 */
+	}
+  }
+}
+.content3 {
+  // display: flex;
+  justify-content: space-between;
+  // flex-wrap: wrap;
+  align-items: center; /* 垂直居中 */
+  padding: 0 0rpx;
+  margin-top: 40rpx;
+  // background: #e6e6e6;
+  .item-box {
+    margin-top: 0rpx;
+	padding-left: 48rpx;
+    width: 100%;
+    height: 100rpx;
+    flex-shrink: 0;
+    background: #ffffff;
+    box-shadow: 0px 1px 8px 0px rgba(109, 155, 212, 0.3);
+    // border-radius: 8px;
+    display: flex;
+    // flex-flow: column;
+    align-items: center;
+    // justify-content: center;
+    position: relative;
+  }
+  .item-box-top {
+    // margin-top: 20rpx;
+    width: 100%;
+    height: 340rpx;
+    flex-shrink: 0;
+    // background: #ffffff;
+	// background: url('/static/freepik__retouch__72762.png');
+    box-shadow: 0px 1px 8px 0px rgba(109, 155, 212, 0.3);
+    border-radius: 20px;
+    display: flex;
+    // flex-flow: column;
+    align-items: center;
+    justify-content: center;
+    // position: relative;
+	
+	.text-overlay {
+	  position: absolute;
+	  top: 25px;
+	  left: 48rpx;
+	  color: #caf6f3;
+	  font-size: 24px;
+	  font-weight: bold;
+	  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5); /* 文字阴影 */
+	}
+	.text-overlay-small {
+	  position: absolute;
+	  top: 55px;
+	  left: 20px;
 	  color: white;
 	  font-size: 14px;
 	  font-weight: normal;

@@ -35,7 +35,7 @@ import { onShow } from '@dcloudio/uni-app'
 import { ref } from 'vue'
 const dataList = [
   {
-    name: '硬件列表',
+    name: '设备列表',
     // url: '/pages/monitoring-center/device/index',
 	url: '/pages/monitoring-center/device/device-address',
     icon: 'list'
@@ -61,7 +61,7 @@ const dataList = [
     icon: 'notification-filled'
   },
   {
-    name: '硬件地图',
+    name: '设备定位',
     url: '/pages/monitoring-center/maps/index',
     icon: 'map-filled'
   },

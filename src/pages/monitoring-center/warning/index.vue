@@ -9,6 +9,13 @@
 			type="datetimerange"
 			v-model="dateRange"
 	      ></uni-datetime-picker>
+		  <uni-data-select
+		        v-model="text"
+		        :localdata="range"
+		        @change="change"
+				:clear="true"
+				placeholder="选择设备名称"
+		      ></uni-data-select>
 	  
 	      <!-- 搜索按钮 -->
 	      <button @click="search()">搜索</button>
@@ -68,7 +75,7 @@
 </template>
 <script setup>
 import { myStorage } from '@/utils/storage.js'
-import { getWarningList, getWarningListByOrgId } from '@/api/index'
+import { getWarningList, getDeviceList, getWarningListByOrgId } from '@/api/index'
 import { ref, reactive, onMounted } from 'vue'
 import { onLoad, onPullDownRefresh } from '@dcloudio/uni-app'
 import dayjs from 'dayjs'
@@ -82,6 +89,8 @@ const status = ref('more')
 // const datePickerRefs = ref<any>(null);
 
 const dateRange = ref([])
+const range = ref([])
+const selectDeviceName = ref('')
 const getData = async () => {
   if (status.value == 'nomore') return
   const userInfo = JSON.parse(myStorage.get('userInfo') || '{}')
@@ -136,6 +145,14 @@ const getData = async () => {
 	    column: "alarmTime"
 	  })
   }
+  if(selectDeviceName.value !== ''){
+	  params.terms.push({
+	    type: "and",
+	    value: selectDeviceName.value,
+	    termType: "eq",
+	    column: "target_name"
+	  })
+  }
   status.value = 'loading'
   let res
   if(userInfo.isAdmin) {
@@ -163,6 +180,45 @@ const getData = async () => {
 	status.value = 'more'
   }
 }
+const getList = async () => {
+  let deviceNameList = []
+  const userInfo = JSON.parse(myStorage.get('userInfo') || '{}')
+  let params = {
+    sorts: [{ name: 'createTime', order: 'desc' }],
+    terms: [
+      {
+        type: 'and',
+        value: userInfo.orgList?.length ? userInfo.orgList[0].id : undefined,
+        termType: 'eq',
+        column: 'orgId'
+      }
+    ]
+  }
+  // if(address){
+	 //  params = {
+	 //    sorts: [{ name: 'createTime', order: 'desc' }],
+	 //    terms: [
+	 //      {
+	 //        type: 'and',
+	 //        value: userInfo.orgList?.length ? userInfo.orgList[0].id : undefined,
+	 //        termType: 'eq',
+	 //        column: 'orgId'
+	 //      },
+		//   {
+		//     type: 'and',
+		//     value: address,
+		//     termType: 'eq',
+		//     column: 'deviceAddress'
+		//   }
+	 //    ]
+	 //  }
+  // }
+  const res = await getDeviceList({ ...queryParams, ...params })
+  for(let i=0; i<res.data.length; i++){
+  	  deviceNameList.push({value:res.data[i].name,text:res.data[i].name})
+  }
+  range.value = deviceNameList
+}
 const goto = val => {
   uni.navigateTo({
     url: `/pages/monitoring-center/warning/warning-records?id=${val.id}&alarmConfigId=${val.alarmConfigId}`
@@ -180,6 +236,7 @@ onLoad(query => {
   type.value = query.type
   level.value = query.level
   getData()
+  getList()
 })
 const search = async () => {
 	dataList.value=[]
@@ -187,6 +244,10 @@ const search = async () => {
 	status.value = 'loading'
 	getData()
 	
+}
+const change = async(e) => {
+	// console.log("e:", e);
+	selectDeviceName.value = e
 }
 </script>
 <style lang="scss" scoped>
