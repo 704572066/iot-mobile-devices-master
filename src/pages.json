@@ -74,6 +74,12 @@
 			}
 		},
 		{
+			"path": "pages/monitoring-center/device/device-function-fire",
+			"style": {
+				"navigationBarTitleText": "操作"
+			}
+		},
+		{
 			"path": "pages/monitoring-center/device/device-detail",
 			"style": {
 				"navigationBarTitleText": "硬件详情"

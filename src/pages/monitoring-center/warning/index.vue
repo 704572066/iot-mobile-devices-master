@@ -227,7 +227,7 @@ const goto = val => {
 
 const toFun = val => {
   uni.navigateTo({
-    url: `/pages/monitoring-center/device/device-function?id=${val.targetId}`
+    url: `/pages/monitoring-center/device/device-function-fire?id=${val.targetId}`
   })
 }
 const type = ref('normal')

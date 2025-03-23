@@ -11,6 +11,7 @@
       </view>
     </view>
     <view class="form-content">
+	  <view v-show="false">
       <uni-forms
         ref="formRef"
         :modelValue="formData[selectIndex]"
@@ -40,12 +41,13 @@
             :placeholder="`请输入,类型为${item.valueType.type}`" />
         </uni-forms-item>
       </uni-forms>
+	  </view>
       <button
         class="submit-btn"
         form-type="submit"
         type="primary"
-        @click="handleSubmit">
-        执行
+        @click="popUpConfirm">
+        执行灭火
       </button>
 	  <button
 	    v-if="videoId !==''"
@@ -57,6 +59,9 @@
 	  </button>
     </view>
   </view>
+  <uni-popup ref="popup" type="dialog">
+  	<uni-popup-dialog mode="base" content="请谨慎操作" message="成功消息" :duration="2000" :before-close="true" @close="closeConfirm" @confirm="handleSubmit"></uni-popup-dialog>
+  </uni-popup>
 </template>
 <script setup>
 import { getDeviceDetail, setDeviceFunction, getMonitoringDetail } from '@/api/index'
@@ -75,10 +80,20 @@ const formData = ref([{}])
 const dataList = ref([])
 const selectIndex = ref(0)
 const videoId = ref('')
+const popup = ref()
 const getDetail = async () => {
   const res = await getDeviceDetail(id)
-  dataList.value = JSON.parse(res.metadata)?.functions.filter(item => item.name!=='灭火')
+  dataList.value = JSON.parse(res.metadata)?.functions.filter(item => item.name==='灭火')
   videoId.value = res.videoId
+  formData.value[0] = {[dataList.value[0].inputs[0].id]:dataList.value[0].inputs[0].valueType.elements[0].value}
+}
+const popUpConfirm = () => {
+  // params.value = {}
+  popup.value.open()
+}
+const closeConfirm = () => {
+  // params.value = {}
+  popup.value.close()
 }
 const changeSelect = index => {
   selectIndex.value = index
@@ -87,6 +102,7 @@ const changeSelect = index => {
 }
 const formRef = ref()
 const handleSubmit = async () => {
+  closeConfirm()
   const params = {
     id: id,
     metaId: dataList.value[selectIndex.value].id
@@ -129,7 +145,8 @@ const openVideo = async () => {
 .content {
   width: 100%;
   .choose-box {
-    display: flex;
+    // display: flex;
+	display: none;
     height: 96rpx;
     line-height: 96rpx;
     margin-bottom: 40rpx;
