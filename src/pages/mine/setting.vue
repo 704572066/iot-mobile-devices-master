@@ -2,17 +2,11 @@
 	
 	<view class="content3">
 	  	  <view class="item-box" @click="handleEditPassword">
-				  <uni-icons
-				    color="#0492dc"
-				    type="notification-filled"
-				    size="30"></uni-icons>
+				  <text class="t-icon t-icon-xiugaimima"></text>
 				  修改密码
 	  	  </view>
 			  <view class="item-box" @click="logout">
-				  <uni-icons
-				    color="#0492dc"
-				    type="notification-filled"
-				    size="30"></uni-icons>
+				  <text class="t-icon t-icon-ziyuanxhdpi"></text>
 				  退出登录
 			  </view>
 	</view>
@@ -135,7 +129,7 @@ const handleClose = () => {
 }
 </script>
 <style lang="scss" scoped>
-
+@import url('@/static/iconfont-weapp-icon.css');
 .content {
   // display: flex;
   justify-content: space-between;

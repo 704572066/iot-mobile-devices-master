@@ -20,17 +20,11 @@
 			</view>
 		</view>
 		<view class="item-box2" @click="goto('/pages/mine/qrcode')">
-			<uni-icons
-			  color="#0492dc"
-			  type="notification-filled"
-			  size="30"></uni-icons>
+			<text class="t-icon t-icon-erweima"></text>
 			关注服务号
 		</view>
 		<view class="item-box2" @click="goto('/pages/mine/help')">
-			<uni-icons
-			  color="#0492dc"
-			  type="notification-filled"
-			  size="30"></uni-icons>
+			<text class="t-icon t-icon-kefu"></text>
 			帮助中心
 		</view>
   </view>
@@ -44,10 +38,7 @@
 			  历史告警
     	  </view>
 		  <view class="item-box" @click="goto('/pages/mine/private')">
-			  <uni-icons
-			    color="#0492dc"
-			    type="notification-filled"
-			    size="30"></uni-icons>
+			  <text class="t-icon t-icon-show_yinsizhengce_fill"></text>
 			  隐私条款
 		  </view>
 		  <view class="item-box" @click="goto('/pages/mine/setting')">
@@ -258,7 +249,10 @@ const getDeviceNum = async () => {
 
 </script>
 <style lang="scss" scoped>
-
+@import url('@/static/iconfont-weapp-icon.css');
+		// .vue-iconfont{
+		// 	font-family: iconfont;
+		// }
 .content {
   // display: flex;
   justify-content: space-between;

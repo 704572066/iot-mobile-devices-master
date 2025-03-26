@@ -17,6 +17,31 @@
         label-position="top"
         label-width="100%"
         :border="true">
+		<view v-show="false">
+			<uni-forms-item
+			  :label="item.name"
+			  :name="item.id"
+			  :required="item.expands.required"
+			  :rules="[
+			    {
+			      required: item.expands.required,
+			      errorMessage: `${item.name}不能为空`
+			    }
+			  ]"
+			  v-for="(item, index) in dataList[selectIndex]?.inputs.slice(0, 1)"
+			  :key="item.name">
+			  <uni-data-select
+			    v-if="item.valueType.type === 'enum'"
+				
+			    v-model="formData[selectIndex][item.id]"
+			    :localdata="item.valueType.elements"></uni-data-select>
+			  <input
+			    v-else
+			    type="text"
+			    v-model="formData[selectIndex][item.id]"
+			    :placeholder="`请输入,类型为${item.valueType.type}`" />
+			</uni-forms-item>
+		</view>
         <uni-forms-item
           :label="item.name"
           :name="item.id"
@@ -27,10 +52,11 @@
               errorMessage: `${item.name}不能为空`
             }
           ]"
-          v-for="item in dataList[selectIndex]?.inputs"
+          v-for="(item, index) in dataList[selectIndex]?.inputs.slice(1)"
           :key="item.name">
           <uni-data-select
             v-if="item.valueType.type === 'enum'"
+			
             v-model="formData[selectIndex][item.id]"
             :localdata="item.valueType.elements"></uni-data-select>
           <input
@@ -47,20 +73,20 @@
         @click="handleSubmit">
         执行
       </button>
-	  <button
+	  <!-- <button
 	    v-if="videoId !==''"
 	    class="submit-btn"
 	    form-type="submit"
 	    type="primary"
 	    @click.stop="openVideo">
 	    查看监控
-	  </button>
+	  </button> -->
     </view>
   </view>
 </template>
 <script setup>
 import { getDeviceDetail, setDeviceFunction, getMonitoringDetail } from '@/api/index'
-import { ref, reactive, onMounted } from 'vue'
+import { ref, reactive, onMounted, computed } from 'vue'
 import { onLoad, onPullDownRefresh } from '@dcloudio/uni-app'
 import URL from '@/utils/url.js'
 // import { getMonitoringList, getMonitoringDetail } from '@/api/index'
@@ -79,6 +105,9 @@ const getDetail = async () => {
   const res = await getDeviceDetail(id)
   dataList.value = JSON.parse(res.metadata)?.functions.filter(item => item.name!=='灭火')
   videoId.value = res.videoId
+  formData.value[0] = {[dataList.value[0].inputs[0].id]:dataList.value[0].inputs[0].valueType.elements[0].value}
+  formData.value[1] = {[dataList.value[1].inputs[0].id]:dataList.value[1].inputs[0].valueType.elements[0].value}
+  
 }
 const changeSelect = index => {
   selectIndex.value = index
@@ -86,6 +115,9 @@ const changeSelect = index => {
   if (!formData.value[index]) formData.value[index] = {}
 }
 const formRef = ref()
+const shouldShow = (item) => {
+  return Array.isArray(item.valueType.elements) && item.valueType.elements.length > 1;
+};
 const handleSubmit = async () => {
   const params = {
     id: id,
