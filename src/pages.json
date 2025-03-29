@@ -82,13 +82,13 @@
 		{
 			"path": "pages/monitoring-center/device/device-detail",
 			"style": {
-				"navigationBarTitleText": "硬件详情"
+				"navigationBarTitleText": "设备详情"
 			}
 		},
 		{
 			"path": "pages/monitoring-center/device/device-channel",
 			"style": {
-				"navigationBarTitleText": "硬件通道"
+				"navigationBarTitleText": "设备通道"
 			}
 		},
 		// {

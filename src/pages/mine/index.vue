@@ -11,11 +11,11 @@
   <view class="content2">
 		<view class="item-box">
 			<view class="item-box3">
-			<view>{{deviceNum}}</view>
+			<view class="number">{{deviceNum}}</view>
 			设备数量
 			</view>
 			<view class="item-box3">
-			<view>{{alarmNum}}</view>
+			<view class="number">{{alarmNum}}</view>
 			告警数量
 			</view>
 		</view>
@@ -251,7 +251,7 @@ const getDeviceNum = async () => {
 <style lang="scss" scoped>
 @import url('@/static/iconfont-weapp-icon.css');
 		// .vue-iconfont{
-		// 	font-family: iconfont;
+		// 	font-family: iconfont;m
 		// }
 .content {
   // display: flex;
@@ -421,11 +421,13 @@ const getDeviceNum = async () => {
       justify-content: center;
       position: relative;
 	  flex-wrap: wrap;
+	  
 	  .item-box3 {
 	  	// padding: 0 20rpx;
 	      // margin-top: -40rpx;
 	  	// margin-left: 20rpx;
 	  	// margin-right: 20rpx;
+		  
 	      width: 300rpx;
 	      height: 90rpx;
 	      flex-shrink: 0;
@@ -437,6 +439,9 @@ const getDeviceNum = async () => {
 	      align-items: center;
 	      justify-content: center;
 	      position: relative;
+		  .number {
+		  				  color: #0492dc;
+		  }
 	      
 	    }
       

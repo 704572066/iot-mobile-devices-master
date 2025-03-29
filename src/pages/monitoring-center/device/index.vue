@@ -26,14 +26,23 @@
       <view class="popup-content">
         <button
           type="primary"
+		  style="backgroundColor:#0492dc" 
           @click="goto(1)">
           运行状态
         </button>
         <button
           type="primary"
+		  style="backgroundColor:#0492dc" 
           @click="goto(2)">
           设备功能
         </button>
+		<button
+		  type="primary"
+		  v-if="videoId !==''"
+		  style="backgroundColor:#0492dc" 
+		  @click.stop="openVideo">
+		  关联视频
+		</button>
       </view>
     </uni-popup>
   </view>
@@ -41,8 +50,9 @@
 <script setup>
 import { myStorage } from '@/utils/storage.js'
 import { onLoad, onPullDownRefresh } from '@dcloudio/uni-app'
-import { getDeviceList } from '@/api/index'
+import { getDeviceList, getDeviceDetail, getMonitoringDetail } from '@/api/index'
 import { ref, reactive } from 'vue'
+import URL from '@/utils/url.js'
 let address
 
 const queryParams = reactive({
@@ -51,6 +61,7 @@ const queryParams = reactive({
 })
 let total = 0
 const dataList = ref([])
+const videoId = ref('')
 onLoad(query => {
   address = query.address
   getList()
@@ -110,8 +121,31 @@ const goto = type => {
 }
 
 const showPopup = ref()
+const openVideo = async () => {
+	    showPopup.value.close()
+	    console.log("open: "+ videoId.value)
+		const res = await getMonitoringDetail(videoId.value)
+		const channelNo = 1
+		const parsedUrl = new URL(res.streamUrl)
+		// console.log(res.streamUrl)
+		// console.log(parsedUrl)
+		const deviceSerial = videoId.value
+		// 获取 search 参数中的 accessToken
+		const accessToken = parsedUrl.params.accessToken
+		// console.log(accessToken)
+		uni.openEmbeddedMiniProgram({
+			appId: 'wxf2b3a0262975d8c2',
+			path: '/pages/live/live?accessToken='+accessToken+'&deviceSerial='+deviceSerial+'&channelNo=1'
+		})
+}
 
-const openPopup = val => {
+const openPopup = async (val) => {
+  const id = val.id
+  console.log("id: "+id)
+  const res = await getDeviceDetail(id)
+  videoId.value = res.videoId??''
+  console.log("res.videoId: "+res.videoId)
+  // console.log(videoId.value)
   selectInfo = val
   showPopup.value.open()
 }
