@@ -1,15 +1,16 @@
 <template>
   <view class="content">
-    <view class="choose-box">
+    <!-- <view class="choose-box">
       <view
+	    v-show=false
         @click="changeSelect(index)"
-        class="item-box"
-        :class="index === selectIndex ? 'item-box-active' : ''"
+        
+        class="item-box-active"
         v-for="(item, index) in dataList"
         :key="item.id">
         {{ item.name }}
       </view>
-    </view>
+    </view> -->
     <view class="form-content">
       <uni-forms
         ref="formRef"
@@ -97,11 +98,9 @@ import { onLoad, onPullDownRefresh } from '@dcloudio/uni-app'
 import URL from '@/utils/url.js'
 // import { getMonitoringList, getMonitoringDetail } from '@/api/index'
 let id
-let name
 // let videoId
 onLoad(query => {
   id = query.id
-  name = query.name
   // videoId = query.videoId
   getDetail()
 })
@@ -112,7 +111,7 @@ const videoId = ref('')
 const popup = ref()
 const getDetail = async () => {
   const res = await getDeviceDetail(id)
-  dataList.value = JSON.parse(res.metadata)?.functions.filter(item => item.name==name)
+  dataList.value = JSON.parse(res.metadata)?.functions.filter(item => item.name =='参数设置')
   videoId.value = res.videoId
   formData.value[0] = {[dataList.value[0].inputs[0].id]:dataList.value[0].inputs[0].valueType.elements[0].value}
   // formData.value[1] = {[dataList.value[1].inputs[0].id]:dataList.value[1].inputs[0].valueType.elements[0].value}

@@ -74,6 +74,18 @@
 			}
 		},
 		{
+			"path": "pages/monitoring-center/device/device-function-selfcheck",
+			"style": {
+				"navigationBarTitleText": "设备自检"
+			}
+		},
+		{
+			"path": "pages/monitoring-center/device/device-function-setparams",
+			"style": {
+				"navigationBarTitleText": "参数设置"
+			}
+		},
+		{
 			"path": "pages/monitoring-center/device/device-function-fire",
 			"style": {
 				"navigationBarTitleText": "操作"
@@ -125,6 +137,18 @@
 			"path": "pages/monitoring-center/maps/index",
 			"style": {
 				"navigationBarTitleText": "设备定位"
+			}
+		},
+		{
+			"path": "pages/monitoring-center/device/device-location",
+			"style": {
+				"navigationBarTitleText": "设备定位"
+			}
+		},
+		{
+			"path": "pages/monitoring-center/device/device-history-alarm",
+			"style": {
+				"navigationBarTitleText": "历史告警"
 			}
 		},
 		{

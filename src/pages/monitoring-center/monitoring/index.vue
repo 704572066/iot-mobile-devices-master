@@ -16,10 +16,9 @@
         <image
           class="imgs"
           :src="item.photoUrl"></image>
-        {{ item.id }}
       </view>
     </view>
-
+<!-- 
     <uni-popup
       ref="showPopup"
       type="bottom">
@@ -35,7 +34,7 @@
           设备功能
         </button>
       </view>
-    </uni-popup>
+    </uni-popup> -->
   </view>
 </template>
 <script setup>
@@ -82,6 +81,8 @@ const openVideo = async (val) => {
 		// console.log(res.streamUrl)
 		// console.log(parsedUrl)
 		const deviceSerial = val.id
+		// const deviceSerial = "33011007992987104011:33010042991117288479"
+		
 		// 获取 search 参数中的 accessToken
 		const accessToken = parsedUrl.params.accessToken
 		// console.log(accessToken)

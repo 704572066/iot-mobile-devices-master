@@ -5,7 +5,7 @@
       class="item-box"
       v-for="item in dataList"
       :key="item.name"
-      @click="openPopup(item)">
+      >
       <view class="head">
         <text :style="{ color: item.state?.text === '离线' ? 'red' : 'green' }"
           >[{{ item.state?.text }}]</text
@@ -13,11 +13,62 @@
         {{ item.name }}
       </view>
       <view class="info">
-        <image
+        <!-- <image
           class="imgs"
-          :src="item.photoUrl"></image>
-        {{ item.id }}
+          :src="item.photoUrl"></image> -->
+        <!--{{ item.id }}-->
+		
+		  <button
+		    type="primary"
+			size="mini"
+				  style="backgroundColor:#0492dc" 
+		    @click="deviceStatus(item.id)">
+		    运行状态
+		  </button>
+		  <button
+		    type="primary"
+			size="mini"
+			style="backgroundColor:#0492dc" 
+		    @click="selfCheck(item.id)">
+		    设备自检
+		  </button>
+		  <button
+			  v-if="item.videoId??''!==''"
+			  type="primary"
+			  size="mini"
+			  style="backgroundColor:#0492dc" 
+			  @click="openVideo(item.videoId)">
+			  关联视频
+		  </button>
       </view>
+	  <view class="info">
+	    <!-- <image
+	      class="imgs"
+	      :src="item.photoUrl"></image> -->
+	    <!--{{ item.id }}-->
+	  		
+	  		  <button
+	  		    type="primary"
+	  			size="mini"
+	  				  style="backgroundColor:#0492dc" 
+	  		    @click="setParams(item.id)">
+	  		    修改参数
+	  		  </button>
+	  		  <button
+	  		    type="primary"
+	  			size="mini"
+	  			style="backgroundColor:#0492dc" 
+	  		    @click="historyAlarm(item.id)">
+	  		    历史告警
+	  		  </button>
+	  		  <button
+	  			  type="primary"
+	  			  size="mini"
+	  			  style="backgroundColor:#0492dc" 
+	  			  @click="deviceLocation(item.id)">
+	  			  设备定位
+	  		  </button>
+	  </view>
     </view>
 
     <uni-popup
@@ -27,7 +78,7 @@
         <button
           type="primary"
 		  style="backgroundColor:#0492dc" 
-          @click="goto(1)">
+          @click="status(item.id)">
           运行状态
         </button>
         <button
@@ -119,17 +170,46 @@ const goto = type => {
   }
   showPopup.value.close()
 }
-
+const deviceStatus = id => {
+	uni.navigateTo({
+	  url: `/pages/monitoring-center/device/device-channel?id=${id}`
+	})
+}
+const deviceFunction = id => {
+	uni.navigateTo({
+	  url: `/pages/monitoring-center/device/device-function?id=${id}`
+	})
+}
+const selfCheck = id => {
+	uni.navigateTo({
+	  url: `/pages/monitoring-center/device/device-function-selfcheck?id=${id}`
+	})
+}
+const setParams = id => {
+	uni.navigateTo({
+	  url: `/pages/monitoring-center/device/device-function-setparams?&id=${id}`
+	})
+}
+const deviceLocation = id => {
+	uni.navigateTo({
+	  url: `/pages/monitoring-center/device/device-location?id=${id}`
+	})
+}
+const historyAlarm = id => {
+	uni.navigateTo({
+	  url: `/pages/monitoring-center/device/device-history-alarm?type=normal&id=${id}`
+	})
+}
 const showPopup = ref()
-const openVideo = async () => {
-	    showPopup.value.close()
-	    console.log("open: "+ videoId.value)
-		const res = await getMonitoringDetail(videoId.value)
+const openVideo = async (videoId) => {
+	    // showPopup.value.close()
+	    console.log("open: "+ videoId)
+		const res = await getMonitoringDetail(videoId)
 		const channelNo = 1
 		const parsedUrl = new URL(res.streamUrl)
 		// console.log(res.streamUrl)
 		// console.log(parsedUrl)
-		const deviceSerial = videoId.value
+		const deviceSerial = videoId
 		// 获取 search 参数中的 accessToken
 		const accessToken = parsedUrl.params.accessToken
 		// console.log(accessToken)
@@ -152,12 +232,12 @@ const openPopup = async (val) => {
 </script>
 <style lang="scss" scoped>
 .content {
-  display: flex;
+  // display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
   padding: 40rpx;
   .item-box {
-    width: calc(50% - 20rpx);
+    width: calc(100% - 20rpx);
     height: 300rpx;
     flex-shrink: 0;
     background: #ffffff;
@@ -177,7 +257,7 @@ const openPopup = async (val) => {
     display: flex;
     align-items: center;
     word-break: break-all;
-    padding: 0 24rpx;
+    padding: 16rpx 24rpx;
     flex: 1;
     .imgs {
       width: 100rpx;
