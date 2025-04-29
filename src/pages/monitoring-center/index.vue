@@ -93,7 +93,8 @@ const getData = async () => {
   const userInfo = JSON.parse(myStorage.get('userInfo') || '{}')
   let res
   // const res = await getWarningList(params)
-  if(userInfo.isAdmin) {
+  // console.log(userInfo)
+  if(userInfo.type.id=='admin') {
   	  res = await getWarningList(params)
   }
   else {

@@ -13,7 +13,6 @@
 		        v-model="text"
 		        :localdata="range"
 		        @change="change"
-				:clear="true"
 				placeholder="选择设备名称"
 		      ></uni-data-select>
 	  
@@ -75,7 +74,7 @@
 </template>
 <script setup>
 import { myStorage } from '@/utils/storage.js'
-import { getWarningList, getDeviceList, getWarningListByOrgId } from '@/api/index'
+import { getWarningList, getDeviceList, getWarningListByOrgId, getAllWarningHandleHistoryByOrgId, getAllWarningHandleHistoryByAdmin } from '@/api/index'
 import { ref, reactive, onMounted } from 'vue'
 import { onLoad, onPullDownRefresh } from '@dcloudio/uni-app'
 import dayjs from 'dayjs'
@@ -91,6 +90,7 @@ const status = ref('more')
 const dateRange = ref([])
 const range = ref([])
 const selectDeviceName = ref('')
+const text = ref('')
 const getData = async () => {
   if (status.value == 'nomore') return
   const userInfo = JSON.parse(myStorage.get('userInfo') || '{}')
@@ -145,20 +145,29 @@ const getData = async () => {
 	    column: "alarmTime"
 	  })
   }
-  if(selectDeviceName.value !== ''){
+  if(text.value !== ''){
 	  params.terms.push({
 	    type: "and",
-	    value: selectDeviceName.value,
+	    value: text.value,
 	    termType: "eq",
 	    column: "target_name"
 	  })
   }
   status.value = 'loading'
   let res
-  if(userInfo.isAdmin) {
-	  res = await getWarningList(params).finally(() => {
-		status.value = 'more'
-	  })
+  // console.log(userInfo)
+  if(userInfo.type.id=='admin') {
+	  if(type.value=='warning'){
+		  res = await getWarningList(params).finally(() => {
+		  			status.value = 'more'
+		  		  })
+	  }
+	  else{
+		  res = await getAllWarningHandleHistoryByAdmin(params).finally(() => {
+			status.value = 'more'
+		  })
+	  }
+	 
   }
   else {
 	  params.terms.push({
@@ -167,9 +176,17 @@ const getData = async () => {
         termType: 'eq',
         column: 'orgId'
       })
-	  res = await getWarningListByOrgId(params).finally(() => {
-	  		status.value = 'more'
-	  })
+	  
+	  if(type.value=='warning'){
+		 res = await getWarningListByOrgId(params).finally(() => {
+					status.value = 'more'
+			  })
+	  }
+	  else{
+		  res = await getAllWarningHandleHistoryByOrgId(params).finally(() => {
+				status.value = 'more'
+		  })
+	  }
   }
   dataList.value = dataList.value.concat(res.data)
   if (dataList.value.length >= res.total) {
@@ -247,7 +264,8 @@ const search = async () => {
 }
 const change = async(e) => {
 	// console.log("e:", e);
-	selectDeviceName.value = e
+	// selectDeviceName.value = e
+	e?(text.value = e):(text.value = '')
 }
 </script>
 <style lang="scss" scoped>

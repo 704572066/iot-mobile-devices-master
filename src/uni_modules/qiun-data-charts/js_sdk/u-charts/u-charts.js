@@ -1952,7 +1952,8 @@ function getYAxisTextList(series, opts, config, stack, yData) {
   var dataRange = getDataRange(minData, maxData);
   var minRange = (yData.min === undefined || yData.min === null) ? dataRange.minRange : yData.min;
   var maxRange = (yData.max === undefined || yData.max === null) ? dataRange.maxRange : yData.max;
-  var eachRange = (maxRange - minRange) / opts.yAxis.splitNumber;
+  // var eachRange = (maxRange - minRange) / opts.yAxis.splitNumber;
+  var eachRange = Math.ceil(((maxRange - minRange) / opts.yAxis.splitNumber));
   var range = [];
   for (var i = 0; i <= opts.yAxis.splitNumber; i++) {
     range.push(minRange + eachRange * i);

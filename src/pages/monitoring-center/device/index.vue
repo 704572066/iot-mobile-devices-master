@@ -1,6 +1,22 @@
 <template>
   <view class="content">
+	<view >
+		  <uni-data-select
+		        v-model="text"
+		        :localdata="range"
+		        @change="change"
+				clear="true"
+				placeholder="选择设备名称"
+		      ></uni-data-select>
+	  
+	      <!-- 搜索按钮 -->
+	      <button @click="search()">搜索</button>
+	</view>
     <!-- <uni-load-more status="more"></uni-load-more> -->
+	<scroll-view
+	  style="height: 100vh"
+	  scroll-y
+	  @scrolltolower="getList">
     <view
       class="item-box"
       v-for="item in dataList"
@@ -70,6 +86,12 @@
 	  		  </button>
 	  </view>
     </view>
+	<uni-load-more
+	    :status="status"
+	    loading-text="加载中..."
+	    loadmore-text="轻轻上拉"
+	    nomore-text="没有更多数据" />
+	</scroll-view>
 
     <uni-popup
       ref="showPopup"
@@ -104,22 +126,31 @@ import { onLoad, onPullDownRefresh } from '@dcloudio/uni-app'
 import { getDeviceList, getDeviceDetail, getMonitoringDetail } from '@/api/index'
 import { ref, reactive } from 'vue'
 import URL from '@/utils/url.js'
+// import { textStride } from 'XrFrame/components/text/Text'
 let address
-
+const range = ref([])
+const selectDeviceName = ref('')
+const text = ref('')
 const queryParams = reactive({
   pageIndex: 1,
   pageSize: 10
 })
 let total = 0
 const dataList = ref([])
+const status = ref('more')
+let resData = []
 const videoId = ref('')
 onLoad(query => {
   address = query.address
   getList()
 })
 const getList = async () => {
+  if (status.value == 'nomore') return
+  let deviceNameList = []
   const userInfo = JSON.parse(myStorage.get('userInfo') || '{}')
   let params = {
+	pageIndex: queryParams.pageIndex,
+	pageSize: queryParams.pageSize,
     sorts: [{ name: 'createTime', order: 'desc' }],
     terms: [
       {
@@ -132,6 +163,8 @@ const getList = async () => {
   }
   if(address){
 	  params = {
+		pageIndex: queryParams.pageIndex,
+		pageSize: queryParams.pageSize,
 	    sorts: [{ name: 'createTime', order: 'desc' }],
 	    terms: [
 	      {
@@ -151,6 +184,18 @@ const getList = async () => {
   }
   const res = await getDeviceList({ ...queryParams, ...params })
   dataList.value = res.data
+  resData = res.data
+  for(let i=0; i<res.data.length; i++){
+  	  deviceNameList.push({value:res.data[i].name,text:res.data[i].name})
+  }
+  range.value = deviceNameList
+  if (dataList.value.length >= res.total) {
+    status.value = 'nomore'
+  }
+  else{
+  	queryParams.pageIndex++
+  	status.value = 'more'
+  }
   total = res.total
 }
 // getList()
@@ -200,6 +245,24 @@ const historyAlarm = id => {
 	  url: `/pages/monitoring-center/device/device-history-alarm?type=normal&id=${id}`
 	})
 }
+const search = async () => {
+	if(text.value!=''){
+		dataList.value= resData.filter(dev => dev.name==text.value)
+	}
+	else{
+		dataList.value= resData
+	}
+	// queryParams.pageIndex=0
+	// status.value = 'loading'
+	// getData()
+	
+}
+const change = async(e) => {
+	// console.log("e:", e);
+	// selectDeviceName.value = e
+	e?(text.value = e):(text.value = '')
+	// e?(this.text = e):(this.text = '')
+}
 const showPopup = ref()
 const openVideo = async (videoId) => {
 	    // showPopup.value.close()
@@ -233,16 +296,18 @@ const openPopup = async (val) => {
 <style lang="scss" scoped>
 .content {
   // display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  padding: 40rpx;
+  // flex-wrap: wrap;
+  // justify-content: space-between;
+  // padding: 40rpx;
   .item-box {
-    width: calc(100% - 20rpx);
+    // width: calc(100% - 20rpx);
     height: 300rpx;
     flex-shrink: 0;
     background: #ffffff;
     box-shadow: 0px 1px 8px 0px rgba(109, 155, 212, 0.3);
-    margin-bottom: 40rpx;
+    // margin-bottom: 40rpx;
+	margin: 40rpx 40rpx 0rpx 40rpx;
+	padding-bottom: 32rpx;
     border-radius: 8px;
     display: flex;
     flex-flow: column;

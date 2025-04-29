@@ -55,6 +55,12 @@ export const getWarningListByOrgId = data =>
 // 告警日志
 export const getWarningHistory = (alarmConfigId, data) =>
   myHttps('post', baseUrl + `alarm/history/${alarmConfigId}/_query`, data)
+// 根据orgid获取所属设备告警处理记录
+export const getAllWarningHandleHistoryByOrgId = (data) =>
+  myHttps('post', baseUrl + `alarm/record/handle-history/_query_native`, data)
+// admin用户获取所属设备告警处理记录
+export const getAllWarningHandleHistoryByAdmin = (data) =>
+  myHttps('post', baseUrl + `alarm/record/all-handle-history/_query_native`, data)
 // code获取微信信息
 export const getWxInfo = data =>
   myHttps(

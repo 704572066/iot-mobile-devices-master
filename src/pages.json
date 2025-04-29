@@ -112,7 +112,7 @@
 		{
 			"path": "pages/monitoring-center/device/device-history-ucharts",
 			"style": {
-				"navigationBarTitleText": "历史数据-ucharts"
+				"navigationBarTitleText": "历史数据"
 			}
 		},
 		{

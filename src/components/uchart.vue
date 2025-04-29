@@ -39,8 +39,11 @@
 		                // 允许滚动
 		                disableGrid: true,
 		                scrollShow: true,
+						labelCount: 5,
+						rotateLabel: true,
+						rotateAngle: -10,
 		                // 单屏展示7条
-		                itemCount: 7,
+		                itemCount: 20,
 		                axisLine: false,
 		                fontSize: 10,
 						interval: 'auto',
@@ -52,11 +55,16 @@
 		                axisLine: false,
 		                dashLength: 2,
 		                gridType: "solid",
+						tofix: 0,
+						splitNumber: 10,
 		                // 横向网格颜色
 		                gridColor: '#2f2f2f',
 		                data: [{
 		                    fontSize: 10,
-		                    axisLine: false //坐标轴轴线是否显示
+		                    axisLine: false ,//坐标轴轴线是否显示
+							max: 150,
+							min: 0,
+							// tofix: 1,
 		                }]
 		            },
 		            extra: {
@@ -74,15 +82,33 @@
 		},
 		methods:{
 		    init() {
-		        if (0 === this.reports.length) return
+		        if (0 === this.reports.length) {
+					// this.chartData = {}
+					return	
+				}
 		        // 数据处理
 		        let categories = []
 		        let aData = [];
+				let max = 0;
+				let min = 0;
 		        const format = 3 === this.type ? 'minute' : 'hour'
 		        this.reports.forEach(item => {
+					if (item.value > max) max = item.value;
+					if (item.value < min) min = item.value;
+					// const absV = Math.abs(item.value); // 取绝对值
+					//   if (absV > maxAbsV) maxAbsV = absV;
+					  // if (absV < minAbsV) minAbsV = absV;
 		            categories.push(this.timeFormat(item.timestamp, format)) 
 		            aData.push(item.value)
 		        })
+				// 向上取整到最接近的 10 的倍数
+				max = Math.ceil(max / 10) * 10;
+				min = Math.floor( min/ 10) * 10;
+
+				this.opts.yAxis.data[0].max = max
+				// console.log(Math.floor(max)+20)
+				this.opts.yAxis.data[0].min = min
+				// console.log( Math.floor(min)-20)
 		        let res = {
 		            categories: categories,
 		            series: [{
@@ -98,7 +124,7 @@
 		                
 		            ]
 		        };
-				console.log("res: "+res.categories[0])
+				// console.log("res: "+res.categories[0])
 		        this.chartData = res
 				
 		    },
@@ -123,7 +149,7 @@
 		            return h + ':00' ;
 		        }
 				if (type == 'minute') {
-				    return   h + ':'+ minute+":"+second;
+				    return   m+'-'+d+' '+h + ':'+ minute+":"+second;
 				}
 		        return ''
 		    },

@@ -62,6 +62,38 @@
         </view>
       </view>
     </uni-forms>
+	<view class="treaty">
+	    <checkbox-group  @change="boxcheck" >
+		   <label>
+		   		<checkbox value="cb" activeBorderColor="blue" />我已阅读并同意同盛物联<text class="privacy-link" @click="openPrivacy">
+          《隐私协议》
+        </text>
+		   </label>
+	    </checkbox-group>
+	</view>
+	<uni-popup ref="privacyPopup" type="center">
+	      <view class="popup-container">
+	        <view class="popup-title">隐私协议</view>
+	        <scroll-view scroll-y class="popup-content">
+	          <text>
+	            欢迎使用同盛物联平台。在您使用我们的服务之前，请仔细阅读本隐私协议。
+	
+	            1. 我们可能收集的个人信息包括但不限于设备信息、日志信息、位置信息等，以便为您提供更好的服务体验。
+	
+	            2. 我们承诺不会将您的个人信息出售或非法提供给第三方。
+	
+	            3. 我们采取业界通行的安全技术和管理措施，保护您的数据安全。
+	
+	            4. 使用本平台即表示您同意我们按照本协议收集、使用和存储您的信息。
+	
+	            如您对本隐私协议有任何疑问，可联系我们获得进一步说明。
+	          </text>
+	        </scroll-view>
+	        <view class="popup-actions">
+	          <button type="primary" @click="onAgree">我已阅读</button>
+	        </view>
+	      </view>
+	    </uni-popup>
   </view>
 </template>
 
@@ -76,11 +108,13 @@ const params = ref({
   password: '',
   code: ''
 })
+const privacyPopup = ref()
 const thirdLoginParams = {
   phone: '18668399921',
   password: '18668399921'
 }
 const code = ref()
+const treaty = ref([])
 const getCodeFun = async () => {
   const data = await getCode()
   thirdLoginParams.uuid = data.uuid
@@ -105,24 +139,43 @@ uni.getPushClientId({
   }
 })
 const formRef = ref()
+const boxcheck = async(e) => {
+	// console.log(e)
+	treaty.value = e.detail.value;
+}
+const onAgree = async() => {
+    privacyPopup.value.close()
+}
+const openPrivacy = async() => {
+    privacyPopup.value.open()
+}
 const loginFun = async () => {
-  await formRef.value.validate()
-  uni.login({
-    provider: 'weixin', //使用微信登录
-    onlyAuthorize: true,
-    success: async function (loginRes) {
-      // const { unionid } = await getWxInfo({
-      //   appid: 'wxe861fc6383450e16',
-      //   secret: 'd0ff5a111437aa331d3e3f9132fe7fe7',
-      //   js_code: loginRes.code,
-      //   grant_type: 'authorization_code'
-      // })
-      handleLogin({ ...params.value, cid, code: loginRes.code })
-    },
-    fail() {
-      handleLogin({ ...params.value, cid, code: loginRes.code })
-    }
-  })
+  if (treaty.value.length == 0) {
+	        uni.showToast({
+	        	title: '请勾选《隐私协议》！',
+	        	duration: 2000,
+				icon:'none'
+	        });
+  }
+  else{
+	  await formRef.value.validate()
+	  uni.login({
+		provider: 'weixin', //使用微信登录
+		onlyAuthorize: true,
+		success: async function (loginRes) {
+		  // const { unionid } = await getWxInfo({
+		  //   appid: 'wxe861fc6383450e16',
+		  //   secret: 'd0ff5a111437aa331d3e3f9132fe7fe7',
+		  //   js_code: loginRes.code,
+		  //   grant_type: 'authorization_code'
+		  // })
+		  handleLogin({ ...params.value, cid, code: loginRes.code })
+		},
+		fail() {
+		  handleLogin({ ...params.value, cid, code: loginRes.code })
+		}
+	  })
+  }
 }
 </script>
 <style lang="scss" scoped>
@@ -142,6 +195,15 @@ const loginFun = async () => {
     height: 150rpx; /* 设置logo的高度 */
     border-radius: 50%; /* 圆形效果 */
     border: 4rpx solid white; /* 可选：为logo添加白色边框 */
+  }
+  .treaty {
+	  color: red;
+	  padding: 36rpx;
+	  .privacy-link {
+	    color: green;
+	    margin-left: 10rpx;
+	    
+	  }
   }
   .login-bg {
     position: absolute;
@@ -173,7 +235,6 @@ const loginFun = async () => {
     background-size: 100% 200%;      /* 背景尺寸调整，控制波浪的频率和高度 */
     background-position: 0 0, 0 0; /* 渐变的位置设置，两个背景交错 */
   }
-
   .login-form {
     border-radius: 16rpx;
     padding: 36rpx;
@@ -193,6 +254,38 @@ const loginFun = async () => {
 	  border-color: #0492dc; /* 自定义边框色，如果需要的话 */
 	  border-radius: 16rpx;
 	}
+  }
+  .popup-container {
+    width: 600rpx;
+    max-height: 80vh;
+    background-color: #fff;
+    border-radius: 20rpx;
+    padding: 30rpx;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .popup-title {
+    font-size: 32rpx;
+    font-weight: bold;
+    margin-bottom: 20rpx;
+    text-align: center;
+  }
+  
+  .popup-content {
+    flex: 1;
+    max-height: 60vh;
+    overflow-y: auto;
+    font-size: 28rpx;
+    line-height: 44rpx;
+    color: #333;
+    margin-bottom: 20rpx;
+  }
+  
+  .popup-actions {
+    display: flex;
+    justify-content: space-between;
+    gap: 20rpx;
   }
 }
 .code-view {
