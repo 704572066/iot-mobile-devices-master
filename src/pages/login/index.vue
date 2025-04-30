@@ -65,7 +65,7 @@
 	<view class="treaty">
 	    <checkbox-group  @change="boxcheck" >
 		   <label>
-		   		<checkbox value="cb" activeBorderColor="blue" />我已阅读并同意同盛物联<text class="privacy-link" @click="openPrivacy">
+		   		<checkbox value="cb" activeBorderColor="blue" />已阅读并同意同盛物联<text class="privacy-link" @click="openPrivacy">
           《隐私协议》
         </text>
 		   </label>
@@ -90,7 +90,7 @@
 	          </text>
 	        </scroll-view>
 	        <view class="popup-actions">
-	          <button type="primary" @click="onAgree">我已阅读</button>
+	          <button type="primary" @click="onAgree">已阅读</button>
 	        </view>
 	      </view>
 	    </uni-popup>
@@ -198,11 +198,9 @@ const loginFun = async () => {
   }
   .treaty {
 	  color: red;
-	  padding: 36rpx;
+	  padding: 32rpx;
 	  .privacy-link {
-	    color: green;
-	    margin-left: 10rpx;
-	    
+	    color: green;    
 	  }
   }
   .login-bg {

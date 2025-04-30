@@ -105,7 +105,7 @@
 				max = Math.ceil(max / 10) * 10;
 				min = Math.floor( min/ 10) * 10;
 
-				this.opts.yAxis.data[0].max = max
+				this.opts.yAxis.data[0].max = max+10
 				// console.log(Math.floor(max)+20)
 				this.opts.yAxis.data[0].min = min
 				// console.log( Math.floor(min)-20)
