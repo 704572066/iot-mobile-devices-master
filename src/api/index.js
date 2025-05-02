@@ -20,6 +20,9 @@ export const getMonitoringDetail = id =>
 // 设备列表
 export const getDeviceList = data =>
   myHttps('post', baseUrl + 'device-instance/_query', data)
+// 设备列表不分页
+export const getDeviceListNoPaging = data =>
+  myHttps('post', baseUrl + 'device-instance/_query/no-paging?paging=false', data)
 // 设备详情
 export const getDeviceDetail = id =>
   myHttps('get', baseUrl + `device-instance/${id}/detail`)

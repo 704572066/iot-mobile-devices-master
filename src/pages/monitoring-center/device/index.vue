@@ -123,7 +123,7 @@
 <script setup>
 import { myStorage } from '@/utils/storage.js'
 import { onLoad, onPullDownRefresh } from '@dcloudio/uni-app'
-import { getDeviceList, getDeviceDetail, getMonitoringDetail } from '@/api/index'
+import { getDeviceList, getDeviceListNoPaging, getDeviceDetail, getMonitoringDetail } from '@/api/index'
 import { ref, reactive } from 'vue'
 import URL from '@/utils/url.js'
 // import { textStride } from 'XrFrame/components/text/Text'
@@ -132,7 +132,7 @@ const range = ref([])
 const selectDeviceName = ref('')
 const text = ref('')
 const queryParams = reactive({
-  pageIndex: 1,
+  pageIndex: 0,
   pageSize: 10
 })
 let total = 0
@@ -140,13 +140,15 @@ const dataList = ref([])
 const status = ref('more')
 let resData = []
 const videoId = ref('')
+let deviceNameList = []
 onLoad(query => {
   address = query.address
+  getData()
   getList()
 })
 const getList = async () => {
   if (status.value == 'nomore') return
-  let deviceNameList = []
+
   const userInfo = JSON.parse(myStorage.get('userInfo') || '{}')
   let params = {
 	pageIndex: queryParams.pageIndex,
@@ -182,13 +184,21 @@ const getList = async () => {
 	    ]
 	  }
   }
-  const res = await getDeviceList({ ...queryParams, ...params })
-  dataList.value = res.data
-  resData = res.data
-  for(let i=0; i<res.data.length; i++){
-  	  deviceNameList.push({value:res.data[i].name,text:res.data[i].name})
+  if(text.value !== ''){
+  	  params.terms.push({
+  	    type: "and",
+  	    value: text.value,
+  	    termType: "eq",
+  	    column: "name"
+  	  })
   }
-  range.value = deviceNameList
+  const res = await getDeviceList({ ...queryParams, ...params })
+  dataList.value = dataList.value.concat(res.data)
+  // resData = dataList.value
+  // for(let i=0; i<res.data.length; i++){
+  // 	  deviceNameList.push({value:res.data[i].name,text:res.data[i].name})
+  // }
+  // range.value = deviceNameList
   if (dataList.value.length >= res.total) {
     status.value = 'nomore'
   }
@@ -199,6 +209,51 @@ const getList = async () => {
   total = res.total
 }
 // getList()
+const getData = async () => {
+  let deviceNameList = []
+  const userInfo = JSON.parse(myStorage.get('userInfo') || '{}')
+  let params = {
+    sorts: [{ name: 'createTime', order: 'desc' }],
+    terms: [
+      {
+        type: 'and',
+        value: userInfo.orgList?.length ? userInfo.orgList[0].id : undefined,
+        termType: 'eq',
+        column: 'orgId'
+      },
+	  {
+	    type: 'and',
+	    value: address,
+	    termType: 'eq',
+	    column: 'deviceAddress'
+	  }
+    ]
+  }
+  // if(address){
+	 //  params = {
+	 //    sorts: [{ name: 'createTime', order: 'desc' }],
+	 //    terms: [
+	 //      {
+	 //        type: 'and',
+	 //        value: userInfo.orgList?.length ? userInfo.orgList[0].id : undefined,
+	 //        termType: 'eq',
+	 //        column: 'orgId'
+	 //      },
+		//   {
+		//     type: 'and',
+		//     value: address,
+		//     termType: 'eq',
+		//     column: 'deviceAddress'
+		//   }
+	 //    ]
+	 //  }
+  // }
+  const res = await getDeviceListNoPaging({...params })
+  for(let i=0; i<res.length; i++){
+  	  deviceNameList.push({value:res[i].name,text:res[i].name})
+  }
+  range.value = deviceNameList
+}
 let selectInfo = {}
 const goto = type => {
   if (type === 1) {
@@ -246,12 +301,16 @@ const historyAlarm = id => {
 	})
 }
 const search = async () => {
-	if(text.value!=''){
-		dataList.value= resData.filter(dev => dev.name==text.value)
-	}
-	else{
-		dataList.value= resData
-	}
+	// if(text.value!=''){
+	// 	dataList.value= resData.filter(dev => dev.name==text.value)
+	// }
+	// else{
+	// 	dataList.value= resData
+	// }
+	dataList.value=[]
+	queryParams.pageIndex=0
+	status.value = 'loading'
+	getList()
 	// queryParams.pageIndex=0
 	// status.value = 'loading'
 	// getData()
