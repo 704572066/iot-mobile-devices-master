@@ -74,7 +74,7 @@
 </template>
 <script setup>
 import { myStorage } from '@/utils/storage.js'
-import { getWarningList, getDeviceList, getWarningListByOrgId, getAllWarningHandleHistoryByOrgId, getAllWarningHandleHistoryByAdmin } from '@/api/index'
+import { getWarningList, getDeviceListNoPaging, getDeviceList, getWarningListByOrgId, getAllWarningHandleHistoryByOrgId, getAllWarningHandleHistoryByAdmin } from '@/api/index'
 import { ref, reactive, onMounted } from 'vue'
 import { onLoad, onPullDownRefresh } from '@dcloudio/uni-app'
 import dayjs from 'dayjs'
@@ -230,9 +230,9 @@ const getList = async () => {
 	 //    ]
 	 //  }
   // }
-  const res = await getDeviceList({ ...queryParams, ...params })
-  for(let i=0; i<res.data.length; i++){
-  	  deviceNameList.push({value:res.data[i].name,text:res.data[i].name})
+  const res = await getDeviceListNoPaging({...params })
+  for(let i=0; i<res.length; i++){
+  	  deviceNameList.push({value:res[i].name,text:res[i].name})
   }
   range.value = deviceNameList
 }

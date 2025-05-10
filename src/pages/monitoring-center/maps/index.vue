@@ -25,7 +25,7 @@
 <script>
 import { myStorage } from '@/utils/storage.js'
 import { onLoad, onPullDownRefresh } from '@dcloudio/uni-app'
-import { getDeviceList } from '@/api/index'
+import { getDeviceList, getDeviceGeo } from '@/api/index'
 import { ref, reactive } from 'vue'
 
 export default {
@@ -93,10 +93,11 @@ export default {
 	        }
 	      ]
 	    }
-	    const res = await getDeviceList({ ...params })
+	    // const res1 = await getDeviceList({ ...params })
+		const res = await getDeviceGeo("cb31f653-9cfd-44c7-9252-bcf2ff402e79")
 		// console.log(res.data)
 		let currentId = 0;
-		const result = res.data.filter(item => item.geoPoint).map(item1 => {
+		const result = res.filter(item => item.geoPoint).map(item1 => {
 		  const [longitude, latitude] = item1.geoPoint.split(',');
 		  const longitudeNum = parseFloat(longitude);
 		  const latitudeNum = parseFloat(latitude);
