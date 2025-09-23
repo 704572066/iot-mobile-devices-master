@@ -132,7 +132,7 @@ import { myStorage } from '@/utils/storage.js'
 import { editPassword } from '@/api/index'
 import { onLoad, onPullDownRefresh } from '@dcloudio/uni-app'
 // import { getWarningList, getWarningListByOrgId } from '@/api/index'
-import { getAlarmLevelConfig, getWarningList, getWarningListByOrgId, getDeviceAddressCategory } from '@/api/index'
+import { getAlarmLevelConfig, getWarningList, getWarningListByOrgId, getDeviceAddressCategory,getDeviceAddressCategoryByAdmin } from '@/api/index'
 
 import { ref } from 'vue'
 const params = ref({})
@@ -199,7 +199,7 @@ const getAlarmNum = async () => {
   const userInfo = JSON.parse(myStorage.get('userInfo') || '{}')
   let res
   // const res = await getWarningList(params)
-  if(userInfo.isAdmin) {
+  if(userInfo.type.id=='admin') {
   	  res = await getWarningList(params)
   }
   else {
@@ -226,7 +226,13 @@ const getDeviceNum = async () => {
       }
     ]
   }
-  const res = await getDeviceAddressCategory(userInfo.orgList[0].id)
+  let res = []
+  if(userInfo.type.id == 'admin'){
+	  res = await getDeviceAddressCategoryByAdmin()
+  }
+  else{
+      res = await getDeviceAddressCategory(userInfo.orgList[0].id)
+  }
   let total = 0
   for(let i=0; i<res.length; i++){
 	  total = total + res[i].value

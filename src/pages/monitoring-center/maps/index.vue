@@ -24,6 +24,8 @@
 </template>
 <script>
 import { myStorage } from '@/utils/storage.js'
+import { wgs84ToGcj02 } from '@/utils/wsg84TOgc02.js'
+// import { wgs84ToGcj02 } from '@pansy/lnglat-transform'
 import { onLoad, onPullDownRefresh } from '@dcloudio/uni-app'
 import { getDeviceList, getDeviceGeo } from '@/api/index'
 import { ref, reactive } from 'vue'
@@ -101,10 +103,11 @@ export default {
 		  const [longitude, latitude] = item1.geoPoint.split(',');
 		  const longitudeNum = parseFloat(longitude);
 		  const latitudeNum = parseFloat(latitude);
+		  const [lat,lon] = wgs84ToGcj02(latitudeNum, longitudeNum);
 		  return {
 				id: item1.id,
-				latitude: latitudeNum,
-				longitude: longitudeNum,
+				latitude: lat,
+				longitude: lon,
 				iconPath: '/static/zhengchangdianwei.png',   
 				width: 23,
 				height: 23, 

@@ -22,7 +22,7 @@
 </template>
 <script setup>
 // import { myStorage } from '@/utils/storage.js'
-import { getAlarmLevelConfig, getWarningList, getDeviceAddressCategory } from '@/api/index'
+import { getAlarmLevelConfig, getWarningList, getDeviceAddressCategory,getDeviceAddressCategoryByAdmin } from '@/api/index'
 import { ref, reactive, onMounted } from 'vue'
 import { onLoad, onPullDownRefresh } from '@dcloudio/uni-app'
 import NoData from '@/components/noData.vue'
@@ -50,7 +50,13 @@ const getList = async () => {
       }
     ]
   }
-  const res = await getDeviceAddressCategory(userInfo.orgList[0].id)
+  let res = []
+  if(userInfo.type.id=='admin') {
+	  res = await getDeviceAddressCategoryByAdmin()
+  }
+  else{
+      res = await getDeviceAddressCategory(userInfo.orgList[0].id)
+  }
   
   if(res.length==1&&res[0].key==='其他'){
 	  uni.navigateTo({

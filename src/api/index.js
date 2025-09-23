@@ -29,7 +29,9 @@ export const getDeviceDetail = id =>
 // 设备地址分类
 export const getDeviceAddressCategory = orgId =>
   myHttps('get', baseUrl + `device-instance/${orgId}/address-category`)
-  
+// admin账号设备地址分类
+export const getDeviceAddressCategoryByAdmin = () =>
+  myHttps('get', baseUrl + `device-instance/admin/address-category`) 
 // 多个设备定位geo
 export const getDeviceGeo = orgId =>
   myHttps('get', baseUrl + `device-instance/${orgId}/multi/geo/_query`)
