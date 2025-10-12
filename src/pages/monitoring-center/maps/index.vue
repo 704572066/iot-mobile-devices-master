@@ -27,7 +27,7 @@ import { myStorage } from '@/utils/storage.js'
 import { wgs84ToGcj02 } from '@/utils/wsg84TOgc02.js'
 // import { wgs84ToGcj02 } from '@pansy/lnglat-transform'
 import { onLoad, onPullDownRefresh } from '@dcloudio/uni-app'
-import { getDeviceList, getDeviceGeo } from '@/api/index'
+import { getDeviceList, getDeviceGeo, getMultiOrgDeviceGeo } from '@/api/index'
 import { ref, reactive } from 'vue'
 
 export default {
@@ -96,7 +96,9 @@ export default {
 	      ]
 	    }
 	    // const res1 = await getDeviceList({ ...params })
-		const res = await getDeviceGeo("cb31f653-9cfd-44c7-9252-bcf2ff402e79")
+		// const res = await getDeviceGeo("cb31f653-9cfd-44c7-9252-bcf2ff402e79")
+		const orgIds = userInfo.orgList.map(org => org.id)
+		const res = await getMultiOrgDeviceGeo(orgIds)
 		// console.log(res.data)
 		let currentId = 0;
 		const result = res.filter(item => item.geoPoint).map(item1 => {

@@ -153,12 +153,14 @@ const getList = async () => {
   let params = {
 	pageIndex: queryParams.pageIndex,
 	pageSize: queryParams.pageSize,
-    sorts: [{ name: 'createTime', order: 'desc' }],
+    sorts: [{ name: 'name', order: 'asc' }],
     terms: [
       {
         type: 'and',
-        value: userInfo.orgList?.length ? userInfo.orgList[0].id : undefined,
-        termType: 'eq',
+        // value: userInfo.orgList?.length ? userInfo.orgList[0].id : undefined,
+        // termType: 'eq',
+		value: userInfo.orgList?.length ? userInfo.orgList.map(org => org.id): [],
+		termType: 'in',
         column: 'orgId'
       }
     ]
@@ -167,12 +169,14 @@ const getList = async () => {
 	  params = {
 		pageIndex: queryParams.pageIndex,
 		pageSize: queryParams.pageSize,
-	    sorts: [{ name: 'createTime', order: 'desc' }],
+	    sorts: [{ name: 'name', order: 'asc' }],
 	    terms: [
 	      {
 	        type: 'and',
-	        value: userInfo.orgList?.length ? userInfo.orgList[0].id : undefined,
-	        termType: 'eq',
+	        // value: userInfo.orgList?.length ? userInfo.orgList[0].id : undefined,
+	        // termType: 'eq',
+			value: userInfo.orgList?.length ? userInfo.orgList.map(org => org.id): [],
+			termType: 'in',
 	        column: 'orgId'
 	      },
 		  {
@@ -213,12 +217,14 @@ const getData = async () => {
   let deviceNameList = []
   const userInfo = JSON.parse(myStorage.get('userInfo') || '{}')
   let params = {
-    sorts: [{ name: 'createTime', order: 'desc' }],
+    sorts: [{ name: 'name', order: 'asc' }],
     terms: [
       {
         type: 'and',
-        value: userInfo.orgList?.length ? userInfo.orgList[0].id : undefined,
-        termType: 'eq',
+        // value: userInfo.orgList?.length ? userInfo.orgList[0].id : undefined,
+        // termType: 'eq',
+		value: userInfo.orgList?.length ? userInfo.orgList.map(org => org.id): [],
+		termType: 'in',
         column: 'orgId'
       },
 	  {

@@ -29,7 +29,7 @@
   </view>
 </template>
 <script setup>
-import { getWarningList, getWarningListByOrgId } from '@/api/index'
+import { getWarningList, getWarningListByOrgId,getWarningListByOrgIds } from '@/api/index'
 import { myStorage } from '@/utils/storage.js'
 import { onShow } from '@dcloudio/uni-app'
 import { ref } from 'vue'
@@ -98,13 +98,19 @@ const getData = async () => {
   	  res = await getWarningList(params)
   }
   else {
-  	  params.terms.push({
-        type: 'and',
-        value: userInfo.orgList?.length ? userInfo.orgList[0].id : undefined,
-        termType: 'eq',
-        column: 'orgId'
-      })
-  	  res = await getWarningListByOrgId(params)
+  	  // params.terms.push({
+     //    type: 'and',
+     //    value: userInfo.orgList?.length ? userInfo.orgList[0].id : undefined,
+     //    termType: 'eq',
+     //    column: 'orgId'
+     //  })
+	  params.terms.push({
+	    type: 'and',
+	    value: userInfo.orgList?.length ? userInfo.orgList.map(org => org.id): [],
+	    termType: 'eq',
+	    column: 'orgId'
+	  })
+  	  res = await getWarningListByOrgIds(params)
   }
   total.value = res.total
 }

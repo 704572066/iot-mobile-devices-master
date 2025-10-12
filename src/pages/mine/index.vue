@@ -132,7 +132,7 @@ import { myStorage } from '@/utils/storage.js'
 import { editPassword } from '@/api/index'
 import { onLoad, onPullDownRefresh } from '@dcloudio/uni-app'
 // import { getWarningList, getWarningListByOrgId } from '@/api/index'
-import { getAlarmLevelConfig, getWarningList, getWarningListByOrgId, getDeviceAddressCategory,getDeviceAddressCategoryByAdmin } from '@/api/index'
+import { getAlarmLevelConfig, getWarningList, getWarningListByOrgId, getWarningListByOrgIds, getDeviceAddressCategory,getDeviceAddressCategoryByAdmin,getMultiOrgDeviceAddressCategory } from '@/api/index'
 
 import { ref } from 'vue'
 const params = ref({})
@@ -203,13 +203,19 @@ const getAlarmNum = async () => {
   	  res = await getWarningList(params)
   }
   else {
-  	  params.terms.push({
-        type: 'and',
-        value: userInfo.orgList?.length ? userInfo.orgList[0].id : undefined,
-        termType: 'eq',
-        column: 'orgId'
-      })
-  	  res = await getWarningListByOrgId(params)
+  	  // params.terms.push({
+     //    type: 'and',
+     //    value: userInfo.orgList?.length ? userInfo.orgList[0].id : undefined,
+     //    termType: 'eq',
+     //    column: 'orgId'
+     //  })
+	  params.terms.push({
+	    type: 'and',
+	    value: userInfo.orgList?.length ? userInfo.orgList.map(org => org.id): [],
+	    termType: 'eq',
+	    column: 'orgId'
+	  })
+  	  res = await getWarningListByOrgIds(params)
   }
   alarmNum.value = res.total
 }
@@ -220,7 +226,7 @@ const getDeviceNum = async () => {
     terms: [
       {
         type: 'and',
-        value: userInfo.orgList?.length ? userInfo.orgList[0].id : undefined,
+        value: userInfo.orgList?.length ? userInfo.orgList.map(org => org.id): [],
         termType: 'eq',
         column: 'orgId'
       }
@@ -231,7 +237,9 @@ const getDeviceNum = async () => {
 	  res = await getDeviceAddressCategoryByAdmin()
   }
   else{
-      res = await getDeviceAddressCategory(userInfo.orgList[0].id)
+	  const orgIds = userInfo.orgList.map(org => org.id)
+	  res = await getMultiOrgDeviceAddressCategory(orgIds)
+      // res = await getDeviceAddressCategory(userInfo.orgList[0].id)
   }
   let total = 0
   for(let i=0; i<res.length; i++){

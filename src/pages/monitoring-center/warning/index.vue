@@ -74,7 +74,7 @@
 </template>
 <script setup>
 import { myStorage } from '@/utils/storage.js'
-import { getWarningList, getDeviceListNoPaging, getDeviceList, getWarningListByOrgId, getAllWarningHandleHistoryByOrgId, getAllWarningHandleHistoryByAdmin } from '@/api/index'
+import { getWarningList, getDeviceListNoPaging, getDeviceList, getWarningListByOrgIds, getAllWarningHandleHistoryByOrgIds, getAllWarningHandleHistoryByAdmin } from '@/api/index'
 import { ref, reactive, onMounted } from 'vue'
 import { onLoad, onPullDownRefresh } from '@dcloudio/uni-app'
 import dayjs from 'dayjs'
@@ -170,20 +170,26 @@ const getData = async () => {
 	 
   }
   else {
-	  params.terms.push({
+	  // params.terms.push({
+   //      type: 'and',
+   //      value: userInfo.orgList?.length ? userInfo.orgList[0].id : undefined,
+   //      termType: 'eq',
+   //      column: 'orgId'
+   //    })
+      params.terms.push({
         type: 'and',
-        value: userInfo.orgList?.length ? userInfo.orgList[0].id : undefined,
-        termType: 'eq',
+        value: userInfo.orgList?.length ? userInfo.orgList.map(org => org.id): [],
+        termType: 'in',
         column: 'orgId'
       })
 	  
 	  if(type.value=='warning'){
-		 res = await getWarningListByOrgId(params).finally(() => {
+		 res = await getWarningListByOrgIds(params).finally(() => {
 					status.value = 'more'
 			  })
 	  }
 	  else{
-		  res = await getAllWarningHandleHistoryByOrgId(params).finally(() => {
+		  res = await getAllWarningHandleHistoryByOrgIds(params).finally(() => {
 				status.value = 'more'
 		  })
 	  }

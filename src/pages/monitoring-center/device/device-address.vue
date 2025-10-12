@@ -12,8 +12,9 @@
 		    color="#0492dc"
 		    type="home-filled"
 		    size="30"></uni-icons>
-          {{ item.key }}
-		  {{ ' ['+item.value+'台]' }}
+			<text >{{ item.key }}</text>
+			<text >[{{ item.value }}台]</text>
+          
         <!-- </view> -->
       </view>
     </template>
@@ -22,7 +23,7 @@
 </template>
 <script setup>
 // import { myStorage } from '@/utils/storage.js'
-import { getAlarmLevelConfig, getWarningList, getDeviceAddressCategory,getDeviceAddressCategoryByAdmin } from '@/api/index'
+import { getAlarmLevelConfig, getWarningList, getDeviceAddressCategory,getDeviceAddressCategoryByAdmin ,getMultiOrgDeviceAddressCategory} from '@/api/index'
 import { ref, reactive, onMounted } from 'vue'
 import { onLoad, onPullDownRefresh } from '@dcloudio/uni-app'
 import NoData from '@/components/noData.vue'
@@ -55,7 +56,9 @@ const getList = async () => {
 	  res = await getDeviceAddressCategoryByAdmin()
   }
   else{
-      res = await getDeviceAddressCategory(userInfo.orgList[0].id)
+	  const orgIds = userInfo.orgList.map(org => org.id)
+	  res = await getMultiOrgDeviceAddressCategory(orgIds)
+      //res = await getDeviceAddressCategory(userInfo.orgList[0].id)
   }
   
   if(res.length==1&&res[0].key==='其他'){

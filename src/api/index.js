@@ -29,12 +29,18 @@ export const getDeviceDetail = id =>
 // 设备地址分类
 export const getDeviceAddressCategory = orgId =>
   myHttps('get', baseUrl + `device-instance/${orgId}/address-category`)
+// 多个组织下的设备地址分类
+export const getMultiOrgDeviceAddressCategory = orgIds =>
+  myHttps('post', baseUrl + `device-instance/address-category`, orgIds)
 // admin账号设备地址分类
 export const getDeviceAddressCategoryByAdmin = () =>
   myHttps('get', baseUrl + `device-instance/admin/address-category`) 
 // 多个设备定位geo
 export const getDeviceGeo = orgId =>
   myHttps('get', baseUrl + `device-instance/${orgId}/multi/geo/_query`)
+// 多个组织多个设备定位geo
+export const getMultiOrgDeviceGeo = orgIds =>
+  myHttps('post', baseUrl + `device-instance/multi-org/geo/_query`, orgIds)
 // 单个设备定位geo
 export const getDeviceGeoById = deviceId =>
 myHttps('get', baseUrl + `device-instance/${deviceId}/geo/_query`)
@@ -63,6 +69,9 @@ export const getWarningList = data =>
 // 通过用户所属组织过滤告警记录
 export const getWarningListByOrgId = data =>
   myHttps('post', baseUrl + `alarm/record/_query_native`, data)
+// 通过用户所属多个组织过滤告警记录
+export const getWarningListByOrgIds = data =>
+  myHttps('post', baseUrl + `alarm/record/multi-org/_query_native`, data)
 
 // 告警日志
 export const getWarningHistory = (alarmConfigId, data) =>
@@ -70,6 +79,9 @@ export const getWarningHistory = (alarmConfigId, data) =>
 // 根据orgid获取所属设备告警处理记录
 export const getAllWarningHandleHistoryByOrgId = (data) =>
   myHttps('post', baseUrl + `alarm/record/handle-history/_query_native`, data)
+// 根据orgids获取所属设备告警处理记录
+export const getAllWarningHandleHistoryByOrgIds = (data) =>
+  myHttps('post', baseUrl + `alarm/record/multi-org/handle-history/_query_native`, data)
 // admin用户获取所属设备告警处理记录
 export const getAllWarningHandleHistoryByAdmin = (data) =>
   myHttps('post', baseUrl + `alarm/record/all-handle-history/_query_native`, data)

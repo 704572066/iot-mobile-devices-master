@@ -50,13 +50,23 @@ let total = 0
 const dataList = ref([])
 const getList = async () => {
   const userInfo = JSON.parse(myStorage.get('userInfo') || '{}')
+  // const params = {
+  //   sorts: [{ name: 'createTime', order: 'desc' }],
+  //   terms: [
+  //     {
+  //       type: 'and',
+  //       value: userInfo.orgList?.length ? userInfo.orgList[0].id : undefined,
+  //       termType: 'eq',
+  //       column: 'orgId'
+  //     }
+  //   ]
+  // }
   const params = {
     sorts: [{ name: 'createTime', order: 'desc' }],
     terms: [
       {
-        type: 'and',
-        value: userInfo.orgList?.length ? userInfo.orgList[0].id : undefined,
-        termType: 'eq',
+        value: userInfo.orgList?.length ? userInfo.orgList.map(org => org.id): [],
+        termType: 'in',
         column: 'orgId'
       }
     ]

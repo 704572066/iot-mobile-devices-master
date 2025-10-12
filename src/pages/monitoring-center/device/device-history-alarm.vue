@@ -75,7 +75,7 @@
 </template>
 <script setup>
 import { myStorage } from '@/utils/storage.js'
-import { getWarningList, getDeviceList, getWarningListByOrgId, getAllWarningHandleHistoryByOrgId, getAllWarningHandleHistoryByAdmin } from '@/api/index'
+import { getWarningList, getDeviceList, getWarningListByOrgId, getAllWarningHandleHistoryByOrgId, getAllWarningHandleHistoryByOrgIds,getAllWarningHandleHistoryByAdmin } from '@/api/index'
 import { ref, reactive, onMounted } from 'vue'
 import { onLoad, onPullDownRefresh } from '@dcloudio/uni-app'
 import dayjs from 'dayjs'
@@ -165,13 +165,19 @@ const getData = async () => {
   }
   else {
 	  // console.log('nonadmin')
+	  // params.terms.push({
+   //      type: 'and',
+   //      value: userInfo.orgList?.length ? userInfo.orgList[0].id : undefined,
+   //      termType: 'eq',
+   //      column: 'orgId'
+   //    })
 	  params.terms.push({
-        type: 'and',
-        value: userInfo.orgList?.length ? userInfo.orgList[0].id : undefined,
-        termType: 'eq',
-        column: 'orgId'
-      })
-	  res = await getAllWarningHandleHistoryByOrgId(params).finally(() => {
+	    type: 'and',
+	    value: userInfo.orgList?.length ? userInfo.orgList.map(org => org.id): [],
+	    termType: 'in',
+	    column: 'orgId'
+	  })
+	  res = await getAllWarningHandleHistoryByOrgIds(params).finally(() => {
 	  		status.value = 'more'
 	  })
   }
