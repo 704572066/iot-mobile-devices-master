@@ -72,6 +72,9 @@ export const getWarningListByOrgId = data =>
 // 通过用户所属多个组织过滤告警记录
 export const getWarningListByOrgIds = data =>
   myHttps('post', baseUrl + `alarm/record/multi-org/_query_native`, data)
+// 通过用户所属多个组织查询组织名称和其下设备数量
+export const getDeviceOrgCategray = data =>
+  myHttps('post', baseUrl + `device-instance/group-org/_query_native`, data)
 
 // 告警日志
 export const getWarningHistory = (alarmConfigId, data) =>

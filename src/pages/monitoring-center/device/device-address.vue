@@ -23,7 +23,7 @@
 </template>
 <script setup>
 // import { myStorage } from '@/utils/storage.js'
-import { getAlarmLevelConfig, getWarningList, getDeviceAddressCategory,getDeviceAddressCategoryByAdmin ,getMultiOrgDeviceAddressCategory} from '@/api/index'
+import { getAlarmLevelConfig, getWarningList, getDeviceAddressCategory,getDeviceAddressCategoryByAdmin ,getMultiOrgDeviceAddressCategory, getWarningListByOrgId} from '@/api/index'
 import { ref, reactive, onMounted } from 'vue'
 import { onLoad, onPullDownRefresh } from '@dcloudio/uni-app'
 import NoData from '@/components/noData.vue'
@@ -38,6 +38,12 @@ const queryParams = reactive({
 let total = 0
 const dataList = ref([])
 const noData = ref(false)
+let orgId
+onLoad(query => {
+  orgId = query.orgId
+  // getData()
+  getList()
+})
 const getList = async () => {
   const userInfo = JSON.parse(myStorage.get('userInfo') || '{}')
   const params = {
@@ -56,7 +62,8 @@ const getList = async () => {
 	  res = await getDeviceAddressCategoryByAdmin()
   }
   else{
-	  const orgIds = userInfo.orgList.map(org => org.id)
+	  // const orgIds = userInfo.orgList.map(org => org.id)
+	  const orgIds = [orgId]
 	  res = await getMultiOrgDeviceAddressCategory(orgIds)
       //res = await getDeviceAddressCategory(userInfo.orgList[0].id)
   }
@@ -74,8 +81,8 @@ const getList = async () => {
   }
   // total = res.total
 }
-getList()
-// const dataList = ref([])
+// getList()
+
 const imgList = [
   'https://iot.jxts119.com/images/fire/fire1.png',
   'https://iot.jxts119.com/images/fire/fire2.png',

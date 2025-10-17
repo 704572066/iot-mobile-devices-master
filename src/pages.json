@@ -68,6 +68,12 @@
 			}
 		},
 		{
+			"path": "pages/monitoring-center/device/device-company",
+			"style": {
+				"navigationBarTitleText": "所属公司"
+			}
+		},
+		{
 			"path": "pages/monitoring-center/device/device-function",
 			"style": {
 				"navigationBarTitleText": "设备功能"

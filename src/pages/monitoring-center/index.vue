@@ -37,7 +37,9 @@ const dataList = [
   {
     name: '设备列表',
     // url: '/pages/monitoring-center/device/index',
-	url: '/pages/monitoring-center/device/device-address',
+	// url: '/pages/monitoring-center/device/device-address',
+	url: '/pages/monitoring-center/device/device-company',
+	
     icon: 'list'
   },
   // {
