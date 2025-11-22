@@ -27,6 +27,7 @@
 		            dataLabel: false,
 		            //不显示圆点
 		            dataPointShape: false,
+					
 		            legend: {
 		                // 图例位置和颜色
 						show: false,  // 隐藏图例
@@ -49,7 +50,9 @@
 						interval: 'auto',
 		                // 滚动条颜色
 		                scrollColor: '#666',
-		                scrollBackgroundColor: '#333'
+		                scrollBackgroundColor: '#333',
+						// 初始滚动位置对齐
+						scrollAlign: 'right'
 		            },
 		            yAxis: {
 		                axisLine: false,
