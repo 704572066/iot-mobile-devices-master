@@ -32,7 +32,7 @@
         <text>{{ item.orgName }}</text>
       </view> -->
 	  <text >{{ item.orgName }}</text>
-	  <text >[{{ item.deviceNum }}台]</text>
+	  <!-- <text >[共{{ item.deviceNum }}台]</text> -->
     </view>
 	</view>
 	<uni-load-more

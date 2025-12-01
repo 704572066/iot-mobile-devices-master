@@ -3,6 +3,21 @@
         <view class="content content-base-bg">
           <qiun-data-charts type="line" id="productionLimitAlarm"  :canvas2d="true" background="#242424" :opts="opts" :chartData="chartData" :ontouch="true" :onzoom="true" />
         </view>
+		<view class="head">
+				  <text :style="{ color: 'green' }">最大值</text>
+				  {{ realMax }}
+		</view>
+		<view class="head">
+				  <text :style="{ color: 'green' }">最小值</text>
+				  {{ realMin }}
+		</view>
+		<view class="head">
+				  <text :style="{ color: 'green' }">平均值</text>
+				  {{ average }}
+		</view>
+		<!-- <text>Max: {{ realMax }}</text>
+		<text>Min: {{ realMin }}</text>
+		<text>avg: {{ average }}</text> -->
     </view>
 </template>
 
@@ -19,6 +34,9 @@
 		data() {
 		    return {
 		        chartData: {},
+				realMax: 0,   // 数据最大值
+				realMin: 0,   // 数据最小值
+				average: 0,   // 平均值
 		        opts: {
 		            color: ["#1890FF", "#91CB74"],
 		            padding: [-10, 15, 15, 0],
@@ -92,18 +110,27 @@
 		        // 数据处理
 		        let categories = []
 		        let aData = [];
-				let max = 0;
-				let min = 0;
+				let max = -9999;
+				let min = 9999;
+				let avg = 0;
+				let count = 0;
+				let sum = 0;            // ← 累加总和
 		        const format = 3 === this.type ? 'minute' : 'hour'
 		        this.reports.forEach(item => {
+					const v = item.value;
 					if (item.value > max) max = item.value;
 					if (item.value < min) min = item.value;
+					sum += v;           // ← 累加
+					count++;            // ← 计数
 					// const absV = Math.abs(item.value); // 取绝对值
 					//   if (absV > maxAbsV) maxAbsV = absV;
 					  // if (absV < minAbsV) minAbsV = absV;
 		            categories.push(this.timeFormat(item.timestamp, format)) 
 		            aData.push(item.value)
 		        })
+				this.realMax = max;
+				this.realMin = min;
+				this.average = count > 0 ? (sum / count).toFixed(1) : 0;
 				// 向上取整到最接近的 10 的倍数
 				max = Math.ceil(max / 10) * 10;
 				min = Math.floor( min/ 10) * 10;
@@ -167,7 +194,14 @@
     ::v-deep uni-canvas {
         height: 380rpx !important;
     }
-
+	.head {
+		height: 96rpx;
+		line-height: 96rpx;
+		padding: 0 30rpx;
+		display: flex;
+		justify-content: space-between; /* 左右对齐 */
+		border-bottom: 1px solid rgba(109, 155, 212, 0.3);
+	  }
     .charts {
         width: 100%;
         position: relative;

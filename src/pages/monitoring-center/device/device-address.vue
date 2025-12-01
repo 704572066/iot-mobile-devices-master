@@ -2,9 +2,9 @@
   <view class="content">
     <template v-for="(item, index) in dataList">
       <view
-        v-if="item.key"
+        v-if="item.address"
         class="item-box"
-        :key="item.key"
+        :key="item.address"
         @click="goto(item)">
         <!-- <view class="head"> -->
           <!-- <text class="t-icon t-icon-channel"></text> -->
@@ -12,9 +12,14 @@
 		    color="#0492dc"
 		    type="home-filled"
 		    size="30"></uni-icons>
-			<text >{{ item.key }}</text>
-			<text >[{{ item.value }}台]</text>
-          
+			<text >{{ item.address }}</text>
+			<text>
+			  <text v-if="item.offline > 0" style="color: #F44336;">离线{{ item.offline }}台/</text>
+			  <text v-if="item.total > 0" style="color: #4CAF50;">共{{ item.total }}台</text>
+			</text>
+			<!-- <text >{{ item.address }}</text>
+			<text >[在线{{ item.offline }}台/离线{{ item.offline }}台]</text>
+          -->
         <!-- </view> -->
       </view>
     </template>
@@ -92,7 +97,7 @@ const imgList = [
 ]
 const goto = val => {
   uni.navigateTo({
-    url: `/pages/monitoring-center/device/index?address=${val.key}`
+    url: `/pages/monitoring-center/device/index?address=${val.address}`
   })
 }
 const type = ref('normal')

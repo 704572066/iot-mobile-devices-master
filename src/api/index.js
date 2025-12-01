@@ -31,10 +31,10 @@ export const getDeviceAddressCategory = orgId =>
   myHttps('get', baseUrl + `device-instance/${orgId}/address-category`)
 // 多个组织下的设备地址分类
 export const getMultiOrgDeviceAddressCategory = orgIds =>
-  myHttps('post', baseUrl + `device-instance/address-category`, orgIds)
+  myHttps('post', baseUrl + `device-instance/address-category-stats`, orgIds)
 // admin账号设备地址分类
 export const getDeviceAddressCategoryByAdmin = () =>
-  myHttps('get', baseUrl + `device-instance/admin/address-category`) 
+  myHttps('get', baseUrl + `device-instance/admin/address-category-stats`) 
 // 多个设备定位geo
 export const getDeviceGeo = orgId =>
   myHttps('get', baseUrl + `device-instance/${orgId}/multi/geo/_query`)
