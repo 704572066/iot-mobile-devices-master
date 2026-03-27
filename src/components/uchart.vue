@@ -3,21 +3,20 @@
         <view class="content content-base-bg">
           <qiun-data-charts type="line" id="productionLimitAlarm"  :canvas2d="true" background="#242424" :opts="opts" :chartData="chartData" :ontouch="true" :onzoom="true" />
         </view>
-		<view class="head">
-				  <text :style="{ color: 'green' }">最大值</text>
-				  {{ realMax }}
+		<view v-if="showInfo">
+			<view class="head">
+					  <text :style="{ color: 'blue' }">最大值</text>
+					  {{ realMax }}
+			</view>
+			<view class="head">
+					  <text :style="{ color: 'blue' }">最小值</text>
+					  {{ realMin }}
+			</view>
+			<view class="head">
+					  <text :style="{ color: 'blue' }">平均值</text>
+					  {{ average }}
+			</view>
 		</view>
-		<view class="head">
-				  <text :style="{ color: 'green' }">最小值</text>
-				  {{ realMin }}
-		</view>
-		<view class="head">
-				  <text :style="{ color: 'green' }">平均值</text>
-				  {{ average }}
-		</view>
-		<!-- <text>Max: {{ realMax }}</text>
-		<text>Min: {{ realMin }}</text>
-		<text>avg: {{ average }}</text> -->
     </view>
 </template>
 
@@ -34,6 +33,7 @@
 		data() {
 		    return {
 		        chartData: {},
+				showInfo: true,
 				realMax: 0,   // 数据最大值
 				realMin: 0,   // 数据最小值
 				average: 0,   // 平均值
@@ -104,8 +104,29 @@
 		methods:{
 		    init() {
 		        if (0 === this.reports.length) {
-					// this.chartData = {}
+					this.opts.yAxis.data[0].max = 100
+					this.opts.yAxis.data[0].min = 0
+					let res = {
+					    categories: [],
+					    series: [{
+					            name: "值",
+					            setShadow: [
+					                3,
+					                15,
+					                30,
+					                "#1890FF"
+					            ],
+					            data: []
+					        },
+					        
+					    ]
+					};
+					this.chartData = res;
+					this.showInfo = false;	
 					return	
+				}
+				if (this.reports[0].type == "enum") {
+					this.showInfo = false;	
 				}
 		        // 数据处理
 		        let categories = []
@@ -120,8 +141,8 @@
 					const v = item.value;
 					if (item.value > max) max = item.value;
 					if (item.value < min) min = item.value;
-					sum += v;           // ← 累加
-					count++;            // ← 计数
+					sum += v;           // 累加
+					count++;            // 计数
 					// const absV = Math.abs(item.value); // 取绝对值
 					//   if (absV > maxAbsV) maxAbsV = absV;
 					  // if (absV < minAbsV) minAbsV = absV;

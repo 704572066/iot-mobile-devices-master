@@ -97,7 +97,7 @@ const imgList = [
 ]
 const goto = val => {
   uni.navigateTo({
-    url: `/pages/monitoring-center/device/index?address=${val.address}`
+    url: `/pages/monitoring-center/device/index?address=${val.address}&orgId=${orgId}`
   })
 }
 const type = ref('normal')

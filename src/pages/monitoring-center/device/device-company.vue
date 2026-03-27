@@ -12,38 +12,35 @@
 	      <!-- 搜索按钮 -->
 	      <button @click="search()">搜索</button>
 	</view>
-    <!-- <uni-load-more status="more"></uni-load-more> -->
 	<scroll-view
-	  style="height: 100vh"
+	  style="height: 100vh;"
 	  scroll-y
 	  @scrolltolower="getList">
-    <view class="content1">
-	<view
-      class="item-box"
-      v-for="item in dataList"
-      :key="item.orgId"
-	  @click="goto(item.orgId)"
-      >
-	  <uni-icons
-	    color="#0492dc"
-	    type="home-filled"
-	    size="30"></uni-icons>
-      <!-- <view class="head">
-        <text>{{ item.orgName }}</text>
-      </view> -->
-	  <text >{{ item.orgName }}</text>
-	  <!-- <text >[共{{ item.deviceNum }}台]</text> -->
-    </view>
-	</view>
-	<uni-load-more
-	    :status="status"
-	    loading-text="加载中..."
-	    loadmore-text="轻轻上拉"
-	    nomore-text="" />
-	</scroll-view>
+      <view class="content1">
+	    <view
+		  class="item-box"
+		  v-for="item in dataList"
+		  :key="item.orgId"
+		  @click="goto(item.orgId)"
+		  >
+		  <uni-icons
+			color="#0492dc"
+			type="home-filled"
+			size="30"></uni-icons>
+      
+		  <text >{{ item.orgName }}</text>
+	  
+		</view>
+	  </view>
 
-   
+	  <uni-load-more
+	      :status="status"
+	      loading-text="加载中..."
+	      loadmore-text="轻轻上拉"
+	      nomore-text="没有更多数据" />
+	</scroll-view>
   </view>
+  
 </template>
 <script setup>
 import { myStorage } from '@/utils/storage.js'
@@ -51,14 +48,13 @@ import { onLoad, onPullDownRefresh } from '@dcloudio/uni-app'
 import { getDeviceList, getDeviceListNoPaging, getDeviceDetail, getDeviceOrgCategray } from '@/api/index'
 import { ref, reactive } from 'vue'
 import URL from '@/utils/url.js'
-// import { textStride } from 'XrFrame/components/text/Text'
 let address
 const range = ref([])
 const selectDeviceName = ref('')
 const text = ref('')
 const queryParams = reactive({
   pageIndex: 0,
-  pageSize: 10
+  pageSize: 12
 })
 let total = 0
 const dataList = ref([])
@@ -67,7 +63,6 @@ let resData = []
 const videoId = ref('')
 let deviceNameList = []
 onLoad(query => {
-  // address = query.address
   deviceNameList = []
   const userInfo = JSON.parse(myStorage.get('userInfo') || '{}')
   for(let i=0; i<userInfo.orgList.length; i++){
@@ -78,7 +73,10 @@ onLoad(query => {
   getList()
 })
 const getList = async () => {
-  if (status.value == 'nomore') return
+  if (status.value == 'nomore'){
+	console.log("nomore")
+	return
+  }
 
   const userInfo = JSON.parse(myStorage.get('userInfo') || '{}')
   
@@ -91,8 +89,6 @@ const getList = async () => {
     terms: [
       {
         type: 'and',
-        // value: userInfo.orgList?.length ? userInfo.orgList[0].id : undefined,
-        // termType: 'eq',
 		value: userInfo.orgList?.length ? userInfo.orgList.map(org => org.id): [],
 		termType: 'in',
         column: 'orgId'
@@ -109,11 +105,7 @@ const getList = async () => {
   }
   const res = await getDeviceOrgCategray(params)
   dataList.value = dataList.value.concat(res.data)
-  // resData = dataList.value
-  // for(let i=0; i<res.data.length; i++){
-  // 	  deviceNameList.push({value:res.data[i].name,text:res.data[i].name})
-  // }
-  // range.value = deviceNameList
+ 
   if (dataList.value.length >= res.total) {
     status.value = 'nomore'
   }
@@ -131,26 +123,18 @@ const goto = orgId => {
     })
 }
 const search = async () => {
-	// if(text.value!=''){
-	// 	dataList.value= resData.filter(dev => dev.name==text.value)
-	// }
-	// else{
-	// 	dataList.value= resData
-	// }
+	
 	dataList.value=[]
 	queryParams.pageIndex=0
 	status.value = 'loading'
 	getList()
-	// queryParams.pageIndex=0
-	// status.value = 'loading'
-	// getData()
+	
 	
 }
 const change = async(e) => {
-	// console.log("e:", e);
-	// selectDeviceName.value = e
+	
 	e?(text.value = e):(text.value = '')
-	// e?(this.text = e):(this.text = '')
+	
 }
 
 
@@ -162,22 +146,7 @@ const change = async(e) => {
 			font-family: iconfont;
 		}
 .content {
-	
-  // display: flex;
-  // flex-wrap: wrap;
-  // justify-content: space-between;
-  // padding: 40rpx;
- //  .item-box {
- //    height: 300rpx;
- //    flex-shrink: 0;
- //    background: #ffffff;
- //    box-shadow: 0px 1px 8px 0px rgba(109, 155, 212, 0.3);
-	// margin: 40rpx 40rpx 0rpx 40rpx;
-	// padding-bottom: 32rpx;
- //    border-radius: 8px;
- //    display: flex;
- //    flex-flow: column;
- //  }
+	height: 100vh;    
  .content1 {
 	 display: flex;
 	 justify-content: space-between;
@@ -211,12 +180,7 @@ const change = async(e) => {
       }
     }
 	}
-  // .head {
-  //   height: 96rpx;
-  //   line-height: 96rpx;
-  //   padding: 0 24rpx;
-  //   border-bottom: 1px solid rgba(109, 155, 212, 0.3);
-  // }
+
   .info {
     display: flex;
     align-items: center;
@@ -231,9 +195,5 @@ const change = async(e) => {
     }
   }
 }
-// .popup-content {
-//   display: flex;
-//   padding: 40rpx;
-//   background: #ffffff;
-// }
+
 </style>

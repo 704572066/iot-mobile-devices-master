@@ -243,7 +243,7 @@ const getDeviceNum = async () => {
   }
   let total = 0
   for(let i=0; i<res.length; i++){
-	  total = total + res[i].value
+	  total = total + res[i].total
   }
   // console.log(total)
   deviceNum.value = total

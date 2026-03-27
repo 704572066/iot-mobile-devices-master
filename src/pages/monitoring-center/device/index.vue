@@ -141,8 +141,10 @@ const status = ref('more')
 let resData = []
 const videoId = ref('')
 let deviceNameList = []
+let orgId
 onLoad(query => {
   address = query.address
+  orgId = query.orgId
   getData()
   getList()
 })
@@ -175,7 +177,9 @@ const getList = async () => {
 	        type: 'and',
 	        // value: userInfo.orgList?.length ? userInfo.orgList[0].id : undefined,
 	        // termType: 'eq',
-			value: userInfo.orgList?.length ? userInfo.orgList.map(org => org.id): [],
+			// value: userInfo.orgList?.length ? userInfo.orgList.map(org => org.id): [],
+			// termType: 'in',
+			value: [orgId],
 			termType: 'in',
 	        column: 'orgId'
 	      },
@@ -223,7 +227,8 @@ const getData = async () => {
         type: 'and',
         // value: userInfo.orgList?.length ? userInfo.orgList[0].id : undefined,
         // termType: 'eq',
-		value: userInfo.orgList?.length ? userInfo.orgList.map(org => org.id): [],
+		// value: userInfo.orgList?.length ? userInfo.orgList.map(org => org.id): [],
+		value: [orgId],
 		termType: 'in',
         column: 'orgId'
       },
