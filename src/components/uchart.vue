@@ -5,7 +5,7 @@
         </view>
 		<view v-if="showInfo">
 			<view class="head">
-					  <text :style="{ color: 'blue' }">最大值</text>
+					  <text :style="{ color: 'blue' }">最大值【发生时间：{{realMax_time }}】</text>
 					  {{ realMax }}
 			</view>
 			<view class="head">
@@ -35,6 +35,7 @@
 		        chartData: {},
 				showInfo: true,
 				realMax: 0,   // 数据最大值
+				realMax_time: "", // 数据最大值时间
 				realMin: 0,   // 数据最小值
 				average: 0,   // 平均值
 		        opts: {
@@ -132,6 +133,7 @@
 		        let categories = []
 		        let aData = [];
 				let max = -9999;
+				let max_time = "";
 				let min = 9999;
 				let avg = 0;
 				let count = 0;
@@ -139,7 +141,10 @@
 		        const format = 3 === this.type ? 'minute' : 'hour'
 		        this.reports.forEach(item => {
 					const v = item.value;
-					if (item.value > max) max = item.value;
+					if (item.value > max) {
+						max = item.value;
+						max_time = this.timeFormat(item.timestamp, format)
+					}
 					if (item.value < min) min = item.value;
 					sum += v;           // 累加
 					count++;            // 计数
@@ -150,6 +155,7 @@
 		            aData.push(item.value)
 		        })
 				this.realMax = max;
+				this.realMax_time = max_time;
 				this.realMin = min;
 				this.average = count > 0 ? (sum / count).toFixed(1) : 0;
 				// 向上取整到最接近的 10 的倍数
