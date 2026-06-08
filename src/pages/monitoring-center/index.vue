@@ -122,6 +122,12 @@ const goto = url => {
   })
 }
 onShow(() => {
+  const token = myStorage.get('token')
+  if(!token) {
+	  uni.reLaunch({
+		url: '/pages/login/index'
+	  })
+  }
   getData()
 })
 </script>

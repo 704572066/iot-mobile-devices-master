@@ -1,6 +1,6 @@
 import { myStorage } from './storage.js'
 import { login } from '@/api/index'
-export const handleLogin = async (queryParams, showLoading = true) => {
+export const handleLogin = async (queryParams, showLoading = true,redirect = true) => {
   // if (!params.value.code) {
   //   uni.showToast({
   //     title: '请输入验证码',
@@ -17,9 +17,11 @@ export const handleLogin = async (queryParams, showLoading = true) => {
     myStorage.set('userLoginInfo', JSON.stringify(queryParams))
     myStorage.set('token', data.token)
     myStorage.set('userInfo', JSON.stringify(data.user))
-    uni.switchTab({
-      url: '/pages/monitoring-center/index'
-    })
+	if (redirect) {
+		uni.switchTab({
+		  url: '/pages/monitoring-center/index'
+		})
+	}	
     uni.hideLoading()
   } catch (error) {
     uni.hideLoading()

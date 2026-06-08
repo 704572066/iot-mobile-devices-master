@@ -2,15 +2,32 @@
 import { myStorage } from '@/utils/storage.js'
 import { handleLogin } from '@/utils/user'
 export default {
-  onLaunch: function () {
+  onLaunch: function (options) {
     console.log('App Launch')
+	console.log(options)
+	// uni.showToast({
+	// 	    title: options.path,
+	// 	    icon: 'none',
+	// 	    duration: 10000
+	// 	})
+	// uni.showModal({
+	//     title: '启动参数',
+	//     content: JSON.stringify(options),
+	//     showCancel: false
+	// })
     // 拿到本地 存进store
     const token = myStorage.get('token')
     if (token) {
-      uni.switchTab({
-        url: '/pages/monitoring-center/index'
-      })
+	  
+	  // 启动页面路径，判断是否是从公众号消息跳转过来的
+      if(options.scene != 1043) {
+		  uni.switchTab({
+		  			url: '/pages/monitoring-center/index'
+		  })
+	  }
+	  
     } else {
+	  
       uni.reLaunch({
         url: '/pages/login/index'
       })
@@ -42,9 +59,12 @@ export default {
   onShow: function () {
     const userLoginInfo = JSON.parse(myStorage.get('userLoginInfo') || '{}')
     if (userLoginInfo.username && userLoginInfo.password) {
-      handleLogin({ ...userLoginInfo, code: undefined }, false)
+      handleLogin({ ...userLoginInfo, code: undefined }, false, false)
     }
     console.log('App Show')
+  },
+  onLoad: function (options) {
+      console.log("onLoad")
   },
   onHide: function () {
     console.log('App Hide')

@@ -22,10 +22,15 @@ import { ref, reactive, onMounted } from 'vue'
 import { onLoad, onPullDownRefresh } from '@dcloudio/uni-app'
 let id
 let groupName
+let name
 // let ids
 onLoad(query => {
   id = query.id
   groupName = query.groupName
+  name = query.name
+  uni.setNavigationBarTitle({
+      title: name+' '+groupName,
+    });
   // ids = query.ids
   getDetail()
 })

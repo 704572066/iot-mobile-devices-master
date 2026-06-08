@@ -38,7 +38,7 @@
 		    type="primary"
 			size="mini"
 				  style="backgroundColor:#0492dc" 
-		    @click="deviceStatus(item.id)">
+		    @click="deviceStatus(item)">
 		    运行状态
 		  </button>
 		  <button
@@ -281,9 +281,9 @@ const goto = type => {
   }
   showPopup.value.close()
 }
-const deviceStatus = id => {
+const deviceStatus = item => {
 	uni.navigateTo({
-	  url: `/pages/monitoring-center/device/device-channel?id=${id}`
+	  url: `/pages/monitoring-center/device/device-channel?id=${item.id}&name=${item.name}`
 	})
 }
 const deviceFunction = id => {

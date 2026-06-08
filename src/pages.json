@@ -14,6 +14,12 @@
 		// 	}
 		// },
 		{
+			"path": "pages/monitoring-center/index",
+			"style": {
+				"navigationBarTitleText": "监控中心"
+			}
+		},
+		{
 			"path": "pages/login/index",
 			"style": {
 				"navigationBarTitleText": "登录"
@@ -49,12 +55,7 @@
 				"navigationBarTitleText": "帮助中心"
 			}
 		},
-		{
-			"path": "pages/monitoring-center/index",
-			"style": {
-				"navigationBarTitleText": "监控中心"
-			}
-		},
+		
 		{
 			"path": "pages/monitoring-center/device/index",
 			"style": {
@@ -100,13 +101,13 @@
 		{
 			"path": "pages/monitoring-center/device/device-detail",
 			"style": {
-				"navigationBarTitleText": "设备详情"
+				"navigationBarTitleText": ""
 			}
 		},
 		{
 			"path": "pages/monitoring-center/device/device-channel",
 			"style": {
-				"navigationBarTitleText": "设备通道"
+				"navigationBarTitleText": "运行状态"
 			}
 		},
 		// {

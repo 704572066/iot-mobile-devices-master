@@ -2,7 +2,7 @@
   <view class="content">
 	  <template v-for="(item, index) in dataList">
 	    <view
-	      v-if="item.ids.length>0"
+	      v-if="item.ids.length>0 && item.display==true"
 	      class="item-box"
 	      @click="goto(item)">
 	      <!-- <view class="head"> -->
@@ -35,11 +35,16 @@
 <script setup>
 import { getDeviceDetail, getDeviceDashboard } from '@/api/index'
 import { ref, reactive, onMounted } from 'vue'
-import { onLoad, onPullDownRefresh } from '@dcloudio/uni-app'
+import { onLoad, onReady, onPullDownRefresh } from '@dcloudio/uni-app'
 import NoData from '@/components/noData.vue'
 let id
+let name
 onLoad(query => {
   id = query.id
+  name = query.name
+  uni.setNavigationBarTitle({
+      title: name+' 运行状态',
+    });
   getDetail()
 })
 const queryParams = reactive({
@@ -50,20 +55,8 @@ const dataList = ref([])
 const noData = ref(false)
 const getDetail = async () => {
   const res = await getDeviceDetail(id)
-  // dataList.value = JSON.parse(res.metadata)?.properties.filter(item => item.expands.isDisplay===true)
-  // const params = {
-  //   dashboard: 'device',
-  //   dimension: 'history',
-  //   measurement: 'properties',
-  //   object: res.productId,
-  //   params: {
-  //     deviceId: res.id,
-  //     history: 1,
-  //     properties: dataList.value.map(item => item.id)
-  //   }
-  // }
-  
-  dataList.value = JSON.parse(res.metadata)?.properties.reduce((acc, property) => {
+
+  const obj = JSON.parse(res.metadata)?.properties.reduce((acc, property) => {
           const groupName = property.expands.groupName || '未分组';
           
           // 如果组名不存在，则初始化该组
@@ -80,10 +73,47 @@ const getDetail = async () => {
   
           return acc;
         }, {});
+
+  // 保证是数组
+  dataList.value = Object.values(obj)
   if(dataList.value.length==0){
 	    noData.value = true
   }
-  console.log(dataList.value);
+  // console.log(dataList.value);
+  
+  const list = dataList.value
+  // 判断每个分组的当前状态是否为关闭状态，如果是那么该分组不显示
+  for (const item of list) {
+    const res = await getDeviceDetail(item.deviceId)
+  
+    const properties = JSON.parse(res.metadata)?.properties?.filter(
+      p =>
+        p.expands.isDisplay === true &&
+        p.name === "当前状态" &&
+        p.expands.groupName === item.groupName
+    ) || []
+  
+    if (properties?.length > 0) {
+      const params = {
+        dashboard: 'device',
+        dimension: 'history',
+        measurement: 'properties',
+        object: res.productId,
+        params: {
+          deviceId: res.id,
+          history: 1,
+          properties: properties.map(p => p.id)
+        }
+      }
+  
+      const dashboardRes = await getDeviceDashboard(params)
+  
+      item.display = dashboardRes?.[0]?.data?.value?.formatValue !== "关闭"
+    } else {
+      item.display = true
+    }
+  }
+ 
   
         // 返回一个数组，只包含 groupName 和 ids
         // return Object.values(groups);
@@ -104,9 +134,15 @@ const getDashboard = async params => {
 }
 const goto = val => {
   uni.navigateTo({
-    url: `/pages/monitoring-center/device/device-detail?id=${val.deviceId}&groupName=${val.groupName}`
+    url: `/pages/monitoring-center/device/device-detail?id=${val.deviceId}&groupName=${val.groupName}&name=${name}`
   })
 }
+
+// onReady(() => {
+//   uni.setNavigationBarTitle({
+//     title: "新的标题",
+//   });
+// })
 </script>
 <style lang="scss" scoped>
 @import url('@/static/iconfont.css');
